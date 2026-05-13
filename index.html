@@ -5,19 +5,30 @@
   <title>跳转中...</title>
 </head>
 <body>
-  <button onclick="openBlank()">no</button>
+  <button onclick="openBlank()">进入系统</button>
   <script>
-    // 这是 mc 网站的完整 HTML 代码（做了转义处理，确保能正确写入新窗口）
     const mcHTML = `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>验证身份</title>
     <style>
+        * {
+            box-sizing: border-box;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
         body {
-            background: #1a1a1a;
-            color: white;
-            font-family: sans-serif;
+            background-color: #030305;
+            /* 1. 深度赛博网格与多层宇宙极光背景 */
+            background-image: 
+                linear-gradient(rgba(18, 24, 38, 0.4) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(18, 24, 38, 0.4) 1px, transparent 1px),
+                radial-gradient(circle at 50% 30%, rgba(99, 102, 241, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.15) 0%, transparent 50%);
+            background-size: 30px 30px, 30px 30px, auto, auto;
+            color: #f1f5f9;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -25,33 +36,157 @@
             margin: 0;
             overflow: hidden;
         }
+        /* 2. wunxch Game 渐变拉丝闪烁霓虹字 */
+        .brand-header {
+            font-family: 'Impact', 'Arial Black', sans-serif;
+            font-size: 38px;
+            font-weight: 900;
+            letter-spacing: 6px;
+            background: linear-gradient(90deg, #38bdf8, #ec4899, #38bdf8);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+            filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.6));
+            animation: flowText 4s linear infinite;
+        }
+        @keyframes flowText {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+        /* 3. 安全终端指示栏 */
+        .status-bar {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 11px;
+            color: #38bdf8;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 40px;
+            font-family: monospace;
+            background: rgba(56, 189, 248, 0.1);
+            padding: 4px 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(56, 189, 248, 0.2);
+        }
+        .pulse-dot {
+            width: 6px;
+            height: 6px;
+            background: #38bdf8;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #38bdf8;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(0.9); opacity: 0.6; }
+            73% { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(56, 189, 248, 0); }
+            100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
+        }
+        /* 4. 史诗级流光环绕卡片外壳 */
+        .glow-wrapper {
+            position: relative;
+            width: 410px;
+            padding: 3px; /* 留出流动边框的厚度 */
+            border-radius: 26px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.03);
+            box-shadow: 0 40px 90px rgba(0, 0, 0, 0.9);
+        }
+        /* 利用伪元素制作绕圈旋转的流光线 */
+        .glow-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(#38bdf8, #a855f7, #ec4899, transparent, transparent, #38bdf8);
+            animation: rotateGlow 4s linear infinite;
+            z-index: 1;
+        }
+        @keyframes rotateGlow {
+            100% { transform: rotate(360deg); }
+        }
+        /* 5. 内部机甲暗黑毛玻璃层 */
         .box {
+            position: relative;
+            z-index: 2; /* 压在流光线上面 */
             text-align: center;
-            background: #333;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background: #0b0c10;
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            padding: 50px 45px;
+            border-radius: 24px;
+        }
+        h2 {
+            margin: 0 0 8px 0;
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: #ffffff;
+        }
+        .subtitle {
+            font-size: 13px;
+            color: #475569;
+            margin-bottom: 40px;
+            letter-spacing: 0.5px;
+        }
+        /* 6. 高阶黑客下沉式输入框 */
+        .input-group {
+            position: relative;
+            margin-bottom: 30px;
         }
         input {
-            padding: 12px;
-            border: none;
-            border-radius: 4px;
-            width: 200px;
-            margin-bottom: 20px;
+            padding: 18px 20px;
+            border: 1px solid #1e2230;
+            border-radius: 14px;
+            width: 100%;
+            background: #050508;
+            color: #ffffff;
+            font-size: 16px;
             outline: none;
+            text-align: center;
+            letter-spacing: 6px;
+            font-family: 'Courier New', Courier, monospace;
+            box-shadow: inset 0 4px 8px rgba(0,0,0,0.9);
         }
+        input:focus {
+            border-color: #ec4899;
+            background: #020203;
+            box-shadow: inset 0 4px 8px rgba(0,0,0,0.9), 0 0 25px rgba(236, 72, 153, 0.35);
+        }
+        input::placeholder {
+            color: #334155;
+            letter-spacing: 0px;
+            font-size: 13px;
+            font-family: sans-serif;
+            font-weight: 600;
+        }
+        /* 7. 超能粒子引擎流光按钮 */
         button {
-            padding: 12px 24px;
-            background: #007bff;
-            color: white;
+            padding: 18px;
+            background: linear-gradient(135deg, #38bdf8 0%, #7c3aed 50%, #ec4899 100%);
+            background-size: 200% auto;
+            color: #ffffff;
             border: none;
-            border-radius: 4px;
+            border-radius: 14px;
             cursor: pointer;
-            font-weight: bold;
-            transition: background 0.3s;
+            font-weight: 800;
+            font-size: 16px;
+            width: 100%;
+            letter-spacing: 4px;
+            box-shadow: 0 4px 25px rgba(124, 58, 237, 0.4);
         }
         button:hover {
-            background: #0056b3;
+            background-position: right center;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 35px rgba(236, 72, 153, 0.6);
+        }
+        button:active {
+            transform: translateY(1px);
         }
         .fullscreen-iframe {
             position: fixed;
@@ -61,35 +196,73 @@
             height: 100%;
             border: none;
             z-index: 9999;
-            background: white;
+            background: #000000;
         }
     </style>
 </head>
 <body>
-<div id="login-box" class="box">
-    <h2>请输入访问密码</h2>
-    <input type="password" id="pw" placeholder="在此输入密码..." autocomplete="off">
-    <br>
-    <button onclick="verify()">进入网页</button>
+<!-- 外层跑马灯流光线包裹器 -->
+<div class="glow-wrapper">
+    <!-- 内层黑客卡片 -->
+    <div id="login-box" class="box">
+        <div class="brand-header">wunxch Game</div>
+        <div class="status-bar">
+            <div class="pulse-dot"></div>
+            <span>QUANTUM NODE SECURED</span>
+        </div>
+        <h2>网关身份验证</h2>
+        <div class="subtitle">请输入访问凭证解密主程序</div>
+        <div class="input-group">
+            <input type="password" id="pw" placeholder="ENTER ACCESS KEY" autocomplete="off">
+        </div>
+        <button onclick="verify()">解密并进入</button>
+    </div>
 </div>
+
 <script>
-    function verify() {
-        const pw = document.getElementById('pw').value;
-        const links = {
-            "fakyou": "https://andy78gg.github.io/didish/",
-            "&*&*": "https://Andy78gg.github.io/Eaglercraft-1",
-            "7878": "https://Andy78gg.github.io/Eaglercraft/",
-            "llq": "https://Andy78gg.github.io/llq/",
-            "6767": "https://Andy78gg.github.io/Eaglercraft-3/wasm/",
-        };
-        if (links[pw]) {
-            const targetUrl = links[pw];
-            document.body.innerHTML = '<iframe src=\"' + targetUrl + '\" class=\"fullscreen-iframe\"></iframe>';
-            document.title = "Google Classroom";
-        } else {
-            alert("密码错误，访问被拒绝！");
+    const encData = [
+        "DhUfCRxPSU4KFwsMUVkMHkESDxUDDA1bDw5EHQYRDxIDVg==",
+        "Tl5SWlUQCQVnREJTERJBTQhNT15OX0QET0UJb0dNSk9USVRLQF4LGw==",
+        "X0xDSEQCGBd2VlNBAABQXxlfXkxfTVUWXlcYfVZfW11FW0VZUUwY",
+        "BBgFHB9LQ0MwAggIW1QWC0IWBRgZGQ5fBQNeAAAAQw==",
+        "XkNCR0UNGRh3WVJOAQ9RUBhQX0NeQlQZX1gZcldQWlJEVERWUEMbBBlAV0RbGA=="
+    ];
+
+    function xor_decrypt(enc_str, key) {
+        try {
+            const decoded = atob(enc_str);
+            let result = "";
+            for (let i = 0; i < decoded.length; i++) {
+                const key_c = key[i % key.length];
+                result += String.fromCharCode(decoded.charCodeAt(i) ^ key_c.charCodeAt(0));
+            }
+            return result;
+        } catch(e) {
+            return "";
         }
     }
+
+    function verify() {
+        const pw = document.getElementById('pw').value;
+        if (!pw) return;
+        
+        let targetUrl = null;
+        for (let i = 0; i < encData.length; i++) {
+            let decrypted = xor_decrypt(encData[i], pw);
+            if (decrypted.indexOf("https://") === 0) {
+                targetUrl = decrypted;
+                break;
+            }
+        }
+
+        if (targetUrl) {
+            document.body.innerHTML = '<iframe src="' + targetUrl + '" class="fullscreen-iframe"></iframe>';
+            document.title = "Google Classroom";
+        } else {
+            alert("🔒 错误：访问密钥无效，解密失败！");
+        }
+    }
+
     document.getElementById('pw').addEventListener('keypress', function (e) {
         if (e.key === 'Enter') verify();
     });
@@ -98,24 +271,22 @@
 </html>`;
 
     function openBlank() {
-      // 打开一个真正的 about:blank 窗口
       const blankWin = window.open('about:blank', '_blank');
       if (blankWin) {
         blankWin.document.open();
         blankWin.document.write(mcHTML);
         blankWin.document.close();
-        // 将当前页面也替换为 about:blank（原标签页变空白）
         window.location.replace('about:blank');
       } else {
         alert('弹窗被浏览器拦截，请允许弹窗后刷新页面重试。');
       }
     }
 
-    // 自动尝试打开
     window.addEventListener('load', function() {
-      // 延迟一点点，避免被某些浏览器误判
       setTimeout(openBlank, 100);
     });
   </script>
+</body>
+</html>
 </body>
 </html>
