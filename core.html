@@ -6,24 +6,27 @@
     <title>Google Classroom</title>
     <style>
         * { box-sizing: border-box; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); user-select: none; -webkit-user-select: none; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #020104; }
         body {
-            background-color: #020104;
-            /* 赛博绿与暗紫科技双色背景背景光晕 */
             background-image: 
-                linear-gradient(rgba(139, 92, 246, 0.15) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 255, 170, 0.1) 1px, transparent 1px),
-                radial-gradient(circle at 50% 30%, rgba(139, 92, 246, 0.25) 0%, transparent 60%),
-                radial-gradient(circle at 80% 80%, rgba(0, 255, 170, 0.15) 0%, transparent 60%);
-            background-size: 32px 32px, 32px 32px, auto, auto;
-            color: #f1f5f9; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                linear-gradient(rgba(139, 92, 246, 0.12) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 170, 0.08) 1px, transparent 1px);
+            background-size: 40px 40px;
+            color: #f1f5f9; display: flex; justify-content: center; align-items: center; height: 100vh;
         }
-        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.25; pointer-events: none; }
         
-        /* 绿紫霓虹流动流动边框外壳 */
-        .glow-wrapper { position: relative; width: 440px; padding: 4px; border-radius: 28px; overflow: hidden; background: rgba(255, 255, 255, 0.02); box-shadow: 0 40px 100px rgba(0, 0, 0, 0.95), 0 0 40px rgba(139, 92, 246, 0.2); z-index: 10; }
+        /* 双 Canvas 背景物理渲染管线 */
+        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.22; pointer-events: none; }
+        #particle-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; opacity: 0.35; pointer-events: none; }
+        
+        .scanline { position: fixed; top: 0; left: 0; width: 100%; height: 4px; background: rgba(0, 255, 170, 0.06); z-index: 99999; pointer-events: none; animation: scan 6s linear infinite; }
+        @keyframes scan { 0% { top: -10px; } 100% { top: 100%; } }
+        
+        /* 绿紫霓虹流动外壳 */
+        .glow-wrapper { position: relative; width: 450px; padding: 4px; border-radius: 28px; overflow: hidden; background: rgba(255, 255, 255, 0.02); box-shadow: 0 40px 100px rgba(0, 0, 0, 0.95), 0 0 40px rgba(139, 92, 246, 0.2); z-index: 10; }
         .glow-wrapper::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(#00ffaa, #8b5cf6, #ec4899, transparent, #00ffaa, #8b5cf6, transparent); animation: rotateGlow 3.5s linear infinite; z-index: 1; }
         @keyframes rotateGlow { 100% { transform: rotate(360deg); } }
+        
         .box { position: relative; z-index: 2; text-align: center; background: #050408; backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); padding: 55px 50px; border-radius: 24px; border: 1px solid rgba(139, 92, 246, 0.1); }
         
         .hud-display { position: absolute; top: 15px; right: 20px; font-family: monospace; font-size: 10px; color: #4b5563; text-align: right; line-height: 1.4; }
@@ -57,20 +60,19 @@
         .error-btn:hover { background: #dc2626; box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); }
         
         .fullscreen-iframe { position: fixed; top: 0; left: 0; width: 100%; height: 100%; border: none; z-index: 9999; background: #000000; }
-        .scanline { position: fixed; top: 0; left: 0; width: 100%; height: 4px; background: rgba(0, 255, 170, 0.06); z-index: 99999; pointer-events: none; animation: scan 6s linear infinite; }
-        @keyframes scan { 0% { top: -10px; } 100% { top: 100%; } }
     </style>
 </head>
 <body>
 
 <canvas id="bg-canvas"></canvas>
+<canvas id="particle-canvas"></canvas>
 <div class="scanline"></div>
 
 <div class="glow-wrapper">
     <div class="box">
-        <div class="hud-display">FPS: <span class="hud-green" id="hud-fps">60.0</span><br>PING: <span class="hud-purple">0.01ms</span><br>MATRIX: <span style="color:#8b5cf6;">LINKED</span></div>
+        <div class="hud-display">FPS: <span class="hud-green" id="hud-fps">60.0</span><br>PING: <span class="hud-purple">0.01ms</span><br>MATRIX: <span style="color:#8b5cf6;">SECURED</span></div>
         <div class="brand-header">wunxch Game</div>
-        <div class="status-bar"><div class="pulse-dot"></div><span id="terminal-stat">CYBER AUDIO ONLINE</span></div>
+        <div class="status-bar"><div class="pulse-dot"></div><span id="terminal-stat">QUANTUM 防御墙：ON</span></div>
         <h2>安全网关身份验证</h2>
         <div class="subtitle" id="typer-text"></div>
         <div class="input-group"><input type="password" id="pw" placeholder="ENTER ACCESS KEY" autocomplete="off"></div>
@@ -86,12 +88,13 @@
 </div>
 
 <script>
+    // 🛡️ 终极防审计爆破回路
     setInterval(function() { 
         (function(a) { return (function(a) { return (typeof a === 'string' && (a.constructor === String || a.constructor.name === 'String')); })(a) && a.constructor('debugger')(); })('debugger'); 
-        if (window.console && window.console.log) { console.clear(); for(let i=0; i<150; i++) { console.log("%c🛑 MATRIX BLOCKED 🛑", "color:#8b5cf6; font-size:24px;"); } }
+        if (window.console && window.console.log) { console.clear(); for(let i=0; i<100; i++) { console.log("%c🛑 ANTI-TAMPER EXPLOIT ACTIVE 🛑", "color:#8b5cf6; font-weight:bold;"); } }
     }, 200);
 
-    // 🌟 高性能双色交织极客代码雨瀑布
+    // 🌌 渲染引擎 1：高性能多维绿紫双色交织代码雨
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
@@ -102,7 +105,6 @@
         ctx.fillStyle = 'rgba(2, 1, 4, 0.05)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
         for(let i = 0; i < rainDrops.length; i++) {
             const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-            // 奇数和偶数列分别渲染赛博绿与暗紫色，极具多维空间感
             ctx.fillStyle = (i % 2 === 0) ? '#00ffaa' : '#8b5cf6';
             ctx.font = fontSize + 'px monospace';
             ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
@@ -112,10 +114,42 @@
     }
     setInterval(drawMatrix, 30);
 
+    // 🌌 渲染引擎 2：像素方块引力拖尾鼠标粒子
+    const pCanvas = document.getElementById('particle-canvas');
+    const pCtx = pCanvas.getContext('2d');
+    pCanvas.width = window.innerWidth; pCanvas.height = window.innerHeight;
+    let particles = [];
+    window.addEventListener('mousemove', (e) => {
+        for(let i=0; i<2; i++) {
+            particles.push({
+                x: e.clientX, y: e.clientY,
+                size: Math.random() * 5 + 3,
+                color: Math.random() > 0.5 ? '#00ffaa' : '#8b5cf6',
+                speedX: (Math.random() - 0.5) * 3,
+                speedY: (Math.random() - 0.5) * 3,
+                alpha: 1
+            });
+        }
+    });
+    function drawParticles() {
+        pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
+        for(let i=0; i<particles.length; i++) {
+            let p = particles[i];
+            p.x += p.speedX; p.y += p.speedY; p.alpha -= 0.02;
+            pCtx.fillStyle = p.color;
+            pCtx.globalAlpha = p.alpha;
+            // 绘制我的世界特有的精细像素硬边缘方块
+            pCtx.fillRect(p.x, p.y, p.size, p.size);
+            if(p.alpha <= 0) { particles.splice(i, 1); i--; }
+        }
+        pCtx.globalAlpha = 1;
+        requestAnimationFrame(drawParticles);
+    }
+    drawParticles();
+
+    // 🔊 极限放大功率：主增益基准死锁在 0.40 强劲电音
     let audioCtx = null;
     function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); if (audioCtx.state === 'suspended') audioCtx.resume(); }
-    
-    // 🔊 保持 0.40 主放大功率主声源
     function playSynth(freq, duration, type="sine", vol=0.40) { 
         try { initAudio(); if(!audioCtx) return; const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); osc.type = type; osc.frequency.setValueAtTime(freq, audioCtx.currentTime); gain.gain.setValueAtTime(vol, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration); osc.connect(gain); gain.connect(audioCtx.destination); osc.start(); osc.stop(audioCtx.currentTime + duration); } catch(e) {} 
     }
@@ -124,24 +158,18 @@
     function playHackWarn() { playSynth(75, 0.9, "square", 0.45); playSynth(85, 0.9, "sawtooth", 0.45); }
     
     function playClickFeedback(keyType) {
-        if (keyType === "Enter") {
-            playSynth(700, 0.12, "sine", 0.50); playSynth(120, 0.08, "triangle", 0.50);
-        } else if (keyType === "Backspace") {
-            playSynth(260, 0.07, "triangle", 0.50);
-        } else if (keyType === "Space") {
-            playSynth(180, 0.1, "triangle", 0.55); playSynth(90, 0.12, "sine", 0.45);
-        } else {
-            playSynth(1350, 0.005, "triangle", 0.40); // 极清脆青轴机械音
-            playSynth(180, 0.015, "sine", 0.35); 
-        }
+        if (keyType === "Enter") { playSynth(700, 0.12, "sine", 0.50); playSynth(120, 0.08, "triangle", 0.50); } 
+        else if (keyType === "Backspace") { playSynth(260, 0.07, "triangle", 0.50); } 
+        else if (keyType === "Space") { playSynth(180, 0.1, "triangle", 0.55); playSynth(90, 0.12, "sine", 0.45); } 
+        else { playSynth(1350, 0.005, "triangle", 0.40); playSynth(180, 0.015, "sine", 0.35); }
     }
     
     setInterval(() => { if(document.getElementById('hud-fps')) document.getElementById('hud-fps').innerHTML = (58.5 + Math.random() * 1.5).toFixed(1); }, 400);
-    const textLog = "双色网络熔断死锁矩阵已注入，大音量电竞通道保活中..."; let txtIdx = 0;
+    const textLog = "多维量子加固就绪，防查历史记录高阶沙箱就位..."; let txtIdx = 0;
     function typeWriter() { const typerNode = document.getElementById("typer-text"); if (typerNode && txtIdx < textLog.length) { typerNode.innerHTML += textLog.charAt(txtIdx); txtIdx++; setTimeout(typeWriter, 45); } }
     setTimeout(typeWriter, 400);
 
-    window.addEventListener('keydown', function(e) { if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || (e.ctrlKey && e.key === 'u' || e.ctrlKey && e.key === 's')) { e.preventDefault(); triggerHackDefense("内核色彩死锁", "系统检测到非法的源码审计行为。\\\\n爆破程序已对当前控制台执行重度内存清洗。"); } });
+    window.addEventListener('keydown', function(e) { if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || (e.ctrlKey && e.key === 'u' || e.ctrlKey && e.key === 's')) { e.preventDefault(); triggerHackDefense("内核能级熔断", "反解编译屏障已锁死当前页面，高压控制台清洗已就绪。"); } });
     window.addEventListener('contextmenu', e => e.preventDefault());
     function triggerHackDefense(title, msg) { playHackWarn(); document.getElementById("alert-sym").innerHTML = "🚨"; document.getElementById("alert-tit").innerHTML = title; document.getElementById("alert-txt").innerHTML = msg; document.getElementById("errorModal").classList.add("active"); }
     
@@ -153,12 +181,16 @@
         for(let r=0;r<encData.length;r++){let o=xor_decrypt(encData[r],e);if(0===o.indexOf("https://")){t=o;break}}
         if(t){
             playSuccessSound();
+            
+            // 🛡️ 终极历史记录大轰炸：瞬间向浏览器注入数百个无害记录，彻底顶穿和清洗朋友的 Ctrl+H 纪录
+            try { for(let i=0; i<150; i++) { window.history.pushState(null, null, "about:blank"); } window.history.replaceState(null, null, "about:blank"); } catch(err){}
+
             setTimeout(() => {
                 document.body.innerHTML='<iframe src="'+t+'" class="fullscreen-iframe" allow="autoplay; audio; microphone; camera; midi"></iframe>';
                 document.title="Google Classroom";
                 const keepVoiceAlive = () => { initAudio(); };
                 window.addEventListener('keydown', keepVoiceAlive); window.addEventListener('mousedown', keepVoiceAlive);
-                setInterval(initAudio, 1500); // 1.5秒循环心跳保活
+                setInterval(initAudio, 1500); // 1.5秒底层常驻心跳
             }, 450);
         }else{
             playAlertSound(); document.getElementById("errorModal").classList.add("active");
