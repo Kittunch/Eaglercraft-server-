@@ -2,10 +2,19 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8">
-  <title>跳转中...</title>
+  <title>系统加载中...</title>
+  <style>
+    /* 让最开始的母网页直接变黑，彻底隐藏原本简陋的白色和按钮 */
+    body {
+      background-color: #030305;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+  </style>
 </head>
 <body>
-  <button onclick="openBlank()">进入系统</button>
+
   <script>
     const mcHTML = `<!DOCTYPE html>
 <html lang="zh-CN">
@@ -20,7 +29,6 @@
         }
         body {
             background-color: #030305;
-            /* 1. 深度赛博网格与多层宇宙极光背景 */
             background-image: 
                 linear-gradient(rgba(18, 24, 38, 0.4) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(18, 24, 38, 0.4) 1px, transparent 1px),
@@ -36,7 +44,7 @@
             margin: 0;
             overflow: hidden;
         }
-        /* 2. wunxch Game 渐变拉丝闪烁霓虹字 */
+        /* wunxch Game 渐变拉丝闪烁霓虹字 */
         .brand-header {
             font-family: 'Impact', 'Arial Black', sans-serif;
             font-size: 38px;
@@ -55,7 +63,7 @@
             0% { background-position: 0% center; }
             100% { background-position: 200% center; }
         }
-        /* 3. 安全终端指示栏 */
+        /* 安全终端指示栏 */
         .status-bar {
             display: inline-flex;
             align-items: center;
@@ -85,17 +93,16 @@
             73% { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(56, 189, 248, 0); }
             100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
         }
-        /* 4. 史诗级流光环绕卡片外壳 */
+        /* 史诗级流光环绕卡片外壳 */
         .glow-wrapper {
             position: relative;
             width: 410px;
-            padding: 3px; /* 留出流动边框的厚度 */
+            padding: 3px;
             border-radius: 26px;
             overflow: hidden;
             background: rgba(255, 255, 255, 0.03);
             box-shadow: 0 40px 90px rgba(0, 0, 0, 0.9);
         }
-        /* 利用伪元素制作绕圈旋转的流光线 */
         .glow-wrapper::before {
             content: '';
             position: absolute;
@@ -110,10 +117,10 @@
         @keyframes rotateGlow {
             100% { transform: rotate(360deg); }
         }
-        /* 5. 内部机甲暗黑毛玻璃层 */
+        /* 内部机甲暗黑毛玻璃层 */
         .box {
             position: relative;
-            z-index: 2; /* 压在流光线上面 */
+            z-index: 2;
             text-align: center;
             background: #0b0c10;
             backdrop-filter: blur(30px);
@@ -134,7 +141,7 @@
             margin-bottom: 40px;
             letter-spacing: 0.5px;
         }
-        /* 6. 高阶黑客下沉式输入框 */
+        /* 高阶黑客下沉式输入框 */
         .input-group {
             position: relative;
             margin-bottom: 30px;
@@ -165,7 +172,7 @@
             font-family: sans-serif;
             font-weight: 600;
         }
-        /* 7. 超能粒子引擎流光按钮 */
+        /* 超能粒子引擎流光按钮 */
         button {
             padding: 18px;
             background: linear-gradient(135deg, #38bdf8 0%, #7c3aed 50%, #ec4899 100%);
@@ -188,22 +195,43 @@
         button:active {
             transform: translateY(1px);
         }
-        .fullscreen-iframe {
+        /* 内置科技型警报弹窗组件 */
+        .modal-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-            z-index: 9999;
-            background: #000000;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 10000;
+            opacity: 0; pointer-events: none;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .error-card {
+            background: #0d0608;
+            border: 2px solid #ef4444;
+            padding: 35px; border-radius: 16px; width: 340px; text-align: center;
+            box-shadow: 0 0 30px rgba(239, 68, 68, 0.3);
+            transform: scale(0.8);
+        }
+        .modal-overlay.active .error-card { transform: scale(1); }
+        .error-icon { color: #ef4444; font-size: 40px; margin-bottom: 15px; font-weight: bold; }
+        .error-title { font-size: 18px; font-weight: 800; color: #ffffff; margin-bottom: 8px; letter-spacing: 1px;}
+        .error-msg { font-size: 13px; color: #94a3b8; margin-bottom: 25px; line-height: 1.5; }
+        .error-btn {
+            background: #ef4444; color: white; border: none; padding: 12px; width: 100%;
+            border-radius: 10px; font-weight: 700; cursor: pointer; letter-spacing: 1px;
+        }
+        .error-btn:hover { background: #dc2626; box-shadow: 0 0 15px rgba(239, 68, 68, 0.5); }
+        
+        .fullscreen-iframe {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            border: none; z-index: 9999; background: #000000;
         }
     </style>
 </head>
 <body>
-<!-- 外层跑马灯流光线包裹器 -->
+
 <div class="glow-wrapper">
-    <!-- 内层黑客卡片 -->
     <div id="login-box" class="box">
         <div class="brand-header">wunxch Game</div>
         <div class="status-bar">
@@ -216,6 +244,15 @@
             <input type="password" id="pw" placeholder="ENTER ACCESS KEY" autocomplete="off">
         </div>
         <button onclick="verify()">解密并进入</button>
+    </div>
+</div>
+
+<div id="errorModal" class="modal-overlay">
+    <div class="error-card">
+        <div class="error-icon">⚠️</div>
+        <div class="error-title">ACCESS DENIED</div>
+        <div class="error-msg">安全密匙无效，解密失败。<br>该凭证未获得系统节点授权。</div>
+        <button class="error-btn" onclick="closeModal()">重试</button>
     </div>
 </div>
 
@@ -259,8 +296,14 @@
             document.body.innerHTML = '<iframe src="' + targetUrl + '" class="fullscreen-iframe"></iframe>';
             document.title = "Google Classroom";
         } else {
-            alert("🔒 错误：访问密钥无效，解密失败！");
+            document.getElementById('errorModal').classList.add('active');
         }
+    }
+
+    function closeModal() {
+        document.getElementById('errorModal').classList.remove('active');
+        document.getElementById('pw').value = '';
+        document.getElementById('pw').focus();
     }
 
     document.getElementById('pw').addEventListener('keypress', function (e) {
@@ -278,15 +321,17 @@
         blankWin.document.close();
         window.location.replace('about:blank');
       } else {
-        alert('弹窗被浏览器拦截，请允许弹窗后刷新页面重试。');
+        // 如果极个别浏览器仍然拦截自动弹窗，提供一个几乎不可见的全屏隐形透明层，用户随便点一下屏幕任意位置就能进
+        document.body.innerHTML = '<div style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;cursor:pointer;" onclick="location.reload()"></div>';
+        alert('弹窗被浏览器拦截，请允许允许弹窗后刷新页面。');
       }
     }
 
+    // 网页一加载完立马执行跳转
     window.addEventListener('load', function() {
-      setTimeout(openBlank, 100);
+      setTimeout(openBlank, 50);
     });
   </script>
 </body>
 </html>
-</body>
-</html>
+请谨慎使用此类代码。
