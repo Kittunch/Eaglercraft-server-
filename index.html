@@ -2,8 +2,9 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>WUNXCH QUANTUM SYSTEM v9.8.7 - LOADING NODE</title>
+  <title>WUNXCH QUANTUM SYSTEM v10.0.1 - ULTIMATE CORE</title>
   <style>
+    * { user-select: none; -webkit-user-select: none; }
     body {
       background-color: #020204;
       background-image: 
@@ -15,7 +16,7 @@
       font-family: 'Courier New', Courier, monospace;
     }
     .launcher-container {
-      text-align: center; z-index: 10; background: rgba(8, 9, 13, 0.9);
+      text-align: center; z-index: 10; background: rgba(8, 9, 13, 0.92);
       padding: 60px; border-radius: 24px; border: 2px solid #38bdf8;
       box-shadow: 0 0 50px rgba(56, 189, 248, 0.3), inset 0 0 30px rgba(56, 189, 248, 0.15);
       animation: pulseBox 4s infinite alternate;
@@ -46,16 +47,16 @@
       background-position: right center; transform: translateY(-5px) scale(1.05);
       box-shadow: 0 0 60px rgba(236, 72, 153, 0.7);
     }
-    #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.18; }
+    #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.22; }
   </style>
 </head>
-<body>
+<body oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;">
 
   <canvas id="bg-canvas"></canvas>
 
   <div class="launcher-container">
-    <div class="system-title">Wunxch Engine</div>
-    <button class="launch-btn" onclick="openBlank()">LAUNCH SYSTEM CORE</button>
+    <div class="system-title">Wunxch Core</div>
+    <button class="launch-btn" onclick="openBlank()">LAUNCH MAIN CLIENT</button>
   </div>
 
   <script>
@@ -77,7 +78,7 @@
     }
     setInterval(drawMatrix, 30);
 
-    // 🌟 核心战斗网关代码 (超级扩充版，塞满黑客功能逻辑)
+    // 🌟 核心加密战术卡片与全套保活功能逻辑
     const mcHTML = `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -85,7 +86,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google Classroom</title>
     <style>
-        * { box-sizing: border-box; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); user-select: none; }
+        * { box-sizing: border-box; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); user-select: none; -webkit-user-select: none; }
         body {
             background-color: #020204;
             background-image: 
@@ -102,7 +103,6 @@
         @keyframes rotateGlow { 100% { transform: rotate(360deg); } }
         .box { position: relative; z-index: 2; text-align: center; background: #06070a; backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); padding: 55px 50px; border-radius: 24px; }
         
-        /* 仪表盘实时面板数据样式 */
         .hud-display { position: absolute; top: 15px; right: 20px; font-family: monospace; font-size: 10px; color: #64748b; text-align: right; line-height: 1.4; }
         .hud-green { color: #34d399; }
 
@@ -124,8 +124,7 @@
         button { padding: 18px; background: linear-gradient(135deg, #38bdf8 0%, #7c3aed 50%, #ec4899 100%); background-size: 200% auto; color: #ffffff; border: none; border-radius: 16px; cursor: pointer; font-weight: 800; font-size: 16px; width: 100%; letter-spacing: 4px; box-shadow: 0 4px 25px rgba(124, 58, 237, 0.4); }
         button:hover { background-position: right center; transform: translateY(-2px); box-shadow: 0 8px 35px rgba(236, 72, 153, 0.6); }
         
-        /* 独立自研高能防篡改警报弹窗 */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(15px); display: flex; justify-content: center; align-items: center; z-index: 10000; opacity: 0; pointer-events: none; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(15px); display: flex; justify-content: center; align-items: center; z-index: 10000; opacity: 0; pointer-events: none; }
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
         .error-card { background: #0c0507; border: 2px solid #ef4444; padding: 40px; border-radius: 20px; width: 360px; text-align: center; box-shadow: 0 0 40px rgba(239, 68, 68, 0.5); transform: scale(0.8); }
         .modal-overlay.active .error-card { transform: scale(1); }
@@ -140,13 +139,12 @@
         @keyframes scan { 0% { top: -10px; } 100% { top: 100%; } }
     </style>
 </head>
-<body>
+<body oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;">
 
 <div class="scanline"></div>
 
 <div class="glow-wrapper">
     <div id="login-box" class="box">
-        <!-- 右上角 HUD 浮动实时帧率面板 -->
         <div class="hud-display">
             FPS: <span class="hud-green" id="hud-fps">60.0</span><br>
             PING: <span class="hud-green">0.01ms</span><br>
@@ -154,13 +152,13 @@
         </div>
 
         <div class="brand-header">wunxch Game</div>
-        <div class="status-bar"><div class="pulse-dot"></div><span id="terminal-stat">HYBRID AUDIO ONLINE</span></div>
+        <div class="status-bar"><div class="pulse-dot"></div><span id="terminal-stat">AUDIO PIPELINE STABLE</span></div>
         <h2>安全网关身份验证</h2>
         <div class="subtitle" id="typer-text"></div>
         <div class="input-group">
             <input type="password" id="pw" placeholder="ENTER ACCESS KEY" autocomplete="off">
         </div>
-        <button onclick="verify()">解密并释放声卡环路</button>
+        <button onclick="verify()">解密并释放全局声卡</button>
     </div>
 </div>
 
@@ -174,12 +172,16 @@
 </div>
 
 <script>
+    // 🛡️ 黑客级动态反调试回路：一旦有人开F12拦截，debugger会让他们控制台卡死
+    setInterval(function() { (function(a) { return (function(a) { return (typeof a === 'string' && (a.constructor === String || a.constructor.name === 'String')); })(a) && a.constructor('debugger')(); })('debugger'); }, 200);
+
     let audioCtx = null;
     function initAudio() {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         if (audioCtx.state === 'suspended') audioCtx.resume();
     }
 
+    // 纯代码物理算法捏造音效
     function playSynth(freq, duration, type="sine") {
         try {
             initAudio(); if(!audioCtx) return;
@@ -195,13 +197,13 @@
     function playAlertSound() { playSynth(140, 0.4, "sawtooth"); setTimeout(() => playSynth(110, 0.4, "sawtooth"), 180); }
     function playSuccessSound() { playSynth(523, 0.12); setTimeout(() => playSynth(659, 0.12), 80); setTimeout(() => playSynth(784, 0.12), 160); setTimeout(() => playSynth(1046, 0.25), 240); }
     function playHackWarn() { playSynth(80, 0.8, "square"); playSynth(90, 0.8, "sawtooth"); }
+    function playClick() { playSynth(1200, 0.005, "triangle"); playSynth(150, 0.02, "sine"); }
 
-    // HUD 动态波动模拟
     setInterval(() => {
         document.getElementById('hud-fps').innerHTML = (58.5 + Math.random() * 1.5).toFixed(1);
     }, 400);
 
-    const textLog = "深度授权阻断回路已就绪，正在侦测本地内存...";
+    const textLog = "高能反调试防御矩阵部署就绪，开始拦截源码逆向...";
     let txtIdx = 0;
     function typeWriter() {
         if (txtIdx < textLog.length) {
@@ -211,14 +213,12 @@
     }
     setTimeout(typeWriter, 400);
 
-    // 🛡️ 核心黑客防御机制：严防右键、F12以及网页保存盗取源码
+    // 强力封杀一切反编译行为
     window.addEventListener('keydown', function(e) {
-        // 封杀 F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
         if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || (e.ctrlKey && e.key === 'u') || (e.ctrlKey && e.key === 's')) {
-            e.preventDefault(); triggerHackDefense("矩阵安全阻断", "系统检测到非法的反编译或源码审计行为。\\n已强制冻结当前网络节点。");
+            e.preventDefault(); triggerHackDefense("矩阵安全阻断", "系统检测到非法的反编译或源码审计行为。\\\\n无线反注入调试器已锁定当前设备。");
         }
     });
-    window.addEventListener('contextmenu', e => { e.preventDefault(); triggerHackDefense("右键协议封杀", "系统已禁用右键审查菜单以保护真实网关代码。"); });
 
     function triggerHackDefense(title, msg) {
         playHackWarn();
@@ -237,13 +237,15 @@
         for(let r=0;r<encData.length;r++){let o=xor_decrypt(encData[r],e);if(0===o.indexOf("https://")){t=o;break}}
         if(t){
             playSuccessSound();
-            // 洗白浏览器历史记录，彻底抹除痕迹，防止朋友通过网页历史后退偷到游戏地址
-            try { window.history.pushState(null, null, null); window.history.replaceState(null, null, null); } catch(err){}
             setTimeout(() => {
-                document.body.innerHTML='<iframe src="'+t+'" class="fullscreen-iframe" allow="autoplay; audio; microphone; camera"></iframe>';
+                document.body.innerHTML='<iframe src="'+t+'" class="fullscreen-iframe" allow="autoplay; audio; microphone; camera; midi"></iframe>';
                 document.title="Google Classroom";
-                const audioKeepAlive = () => { initAudio(); };
-                window.addEventListener('keydown', audioKeepAlive); window.addEventListener('mousedown', audioKeepAlive);
+                
+                // 🔴 双轨保活常驻回路：只要用户玩游戏按键盘或点鼠标，无限强制激活全局声卡，防止在中途变哑巴
+                const keepVoiceAlive = () => { initAudio(); };
+                window.addEventListener('keydown', keepVoiceAlive);
+                window.addEventListener('mousedown', keepVoiceAlive);
+                setInterval(initAudio, 2000); // 没两秒自动底层激活
             }, 450);
         }else{
             playAlertSound();
@@ -254,26 +256,34 @@
     function closeModal(){
         playSynth(440, 0.05);
         document.getElementById("errorModal").classList.remove("active");
-        // 还原报错卡片的默认文案
         document.getElementById("alert-sym").innerHTML = "🛑";
         document.getElementById("alert-tit").innerHTML = "CRITICAL ERROR";
         document.getElementById("alert-txt").innerHTML = "身份凭证错误。<br>安全防御矩阵已拦截当前伪造请求。";
         document.getElementById("pw").value=""; document.getElementById("pw").focus();
     }
     document.getElementById("pw").addEventListener("keypress",(function(e){"Enter"===e.key&&verify()}));
-    document.getElementById("pw").addEventListener("input", () => playSynth(500, 0.01, "triangle"));
-<\/script>
+    // 机械键盘输入物理按键回响
+    document.getElementById("pw").addEventListener("input", () => playClick());
+</script>
 </body>
 </html>`;
 
     function openBlank() {
-      const blankWin = window.open('about:blank', '_blank');
-      if (blankWin) {
-        blankWin.document.open();
-        blankWin.document.write(mcHTML);
-        blankWin.document.close();
+      if (window.location.protocol === 'file:') {
+        document.body.innerHTML = mcHTML;
+        const scripts = document.body.getElementsByTagName('script');
+        for (let i = 0; i < scripts.length; i++) {
+          eval(scripts[i].innerHTML);
+        }
       } else {
-        alert('弹窗被浏览器拦截，请在浏览器右上角地址栏右侧点击“允许该网站弹窗”后重试。');
+        const blankWin = window.open('about:blank', '_blank');
+        if (blankWin) {
+          blankWin.document.open();
+          blankWin.document.write(mcHTML);
+          blankWin.document.close();
+        } else {
+          alert('弹窗被浏览器拦截，请在浏览器右上角地址栏右侧点击“允许该网站弹窗”后重试。');
+        }
       }
     }
   </script>
