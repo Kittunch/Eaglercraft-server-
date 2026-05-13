@@ -4,14 +4,51 @@
   <meta charset="UTF-8">
   <title>系统加载中...</title>
   <style>
-    /* 让最开始的文件网页变黑，彻底隐藏任何加载痕迹 */
-    body { background-color: #030305; margin: 0; padding: 0; overflow: hidden; }
+    /* 1. 母网页纯净暗黑背景 + 赛博微弱光晕 */
+    body {
+      background-color: #030305;
+      background-image: radial-gradient(circle at 50% 50%, #141923 0%, #030305 70%);
+      margin: 0; 
+      padding: 0; 
+      overflow: hidden;
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    /* 2. 华丽的系统核心启动按钮 */
+    .launch-btn {
+      padding: 22px 45px;
+      background: linear-gradient(135deg, #38bdf8 0%, #7c3aed 50%, #ec4899 100%);
+      background-size: 200% auto;
+      color: white; 
+      border: none; 
+      border-radius: 16px;
+      font-size: 18px; 
+      font-weight: 900; 
+      letter-spacing: 5px;
+      cursor: pointer; 
+      box-shadow: 0 0 35px rgba(124, 58, 237, 0.4);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .launch-btn:hover {
+      background-position: right center;
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 0 50px rgba(236, 72, 153, 0.6);
+    }
+    .launch-btn:active {
+      transform: translateY(1px) scale(0.99);
+    }
   </style>
 </head>
 <body>
 
+  <!-- 手动点击这个高科技感按钮，完美绕过浏览器对 file:// 协议的拦截保护 -->
+  <button class="launch-btn" onclick="openBlank()">LAUNCH WUNXCH CORE</button>
+
   <script>
-    // 这是核心的网关与游戏代码，将被强行灌入内存，完全隔断文件路径
+    // 3. 将被灌入新标签页内存的宇宙量子黑洞验证网关代码
     const mcHTML = `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -45,7 +82,7 @@
         .pulse-dot { width: 6px; height: 6px; background: #38bdf8; border-radius: 50%; box-shadow: 0 0 10px #38bdf8; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { transform: scale(0.9); opacity: 0.6; } 73% { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(56, 189, 248, 0); } 100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); } }
         .glow-wrapper { position: relative; width: 410px; padding: 3px; border-radius: 26px; overflow: hidden; background: rgba(255, 255, 255, 0.03); box-shadow: 0 40px 90px rgba(0, 0, 0, 0.9); }
-        .glow-wrapper::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(#38bdf8, #a855f7, #ec4899, transparent, transparent, #38bdf8); animation: rotateGlow 4s linear infinite; z-index: 1; }
+        .glow-wrapper::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(#38bdf8,#a855f7,#ec4899,transparent,transparent,#38bdf8); animation: rotateGlow 4s linear infinite; z-index: 1; }
         @keyframes rotateGlow { 100% { transform: rotate(360deg); } }
         .box { position: relative; z-index: 2; text-align: center; background: #0b0c10; backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); padding: 50px 45px; border-radius: 24px; }
         h2 { margin: 0 0 8px 0; font-size: 20px; font-weight: 800; letter-spacing: 2px; color: #ffffff; }
@@ -70,7 +107,7 @@
     </style>
 </head>
 <body>
-<div class="glow-wrapper" id="main-gate">
+<div class="glow-wrapper">
     <div id="login-box" class="box">
         <div class="brand-header">wunxch Game</div>
         <div class="status-bar"><div class="pulse-dot"></div><span>QUANTUM NODE SECURED</span></div>
@@ -90,40 +127,24 @@
 <script>
     const encData = ["DhUfCRxPSU4KFwsMUVkMHkESDxUDDA1bDw5EHQYRDxIDVg==","Tl5SWlUQCQVnREJTERJBTQhNT15OX0QET0UJb0dNSk9USVRLQF4LGw==","X0xDSEQCGBd2VlNBAABQXxlfXkxfTVUWXlcYfVZfW11FW0VZUUwY","BBgFHB9LQ0MwAggIW1QWC0IWBRgZGQ5fBQNeAAAAQw==","XkNCR0UNGRh3WVJOAQ9RUBhQX0NeQlQZX1gZcldQWlJEVERWUEMbBBlAV0RbGA=="];
     function xor_decrypt(e,t){try{const n=atob(e);let r="";for(let o=0;o<n.length;o++){const c=t[o%t.length];r+=String.fromCharCode(n.charCodeAt(o)^c.charCodeAt(0))}return r}catch(e){return""}}
-    function verify(){
-        const e=document.getElementById("pw").value;if(!e)return;let t=null;
-        for(let r=0;r<encData.length;r++){let o=xor_decrypt(encData[r],e);if(0===o.indexOf("https://")){t=o;break}}
-        if(t){
-            document.getElementById("main-gate").style.display="none";
-            document.title="Google Classroom";
-            const iframe=document.createElement("iframe");
-            iframe.src=t;
-            iframe.className="fullscreen-iframe";
-            document.body.appendChild(iframe);
-        }else{
-            document.getElementById("errorModal").classList.add("active")
-        }
-    }
+    function verify(){const e=document.getElementById("pw").value;if(!e)return;let t=null;for(let r=0;r<encData.length;r++){let o=xor_decrypt(encData[r],e);if(0===o.indexOf("https://")){t=o;break}}t?(document.body.innerHTML='<iframe src="'+t+'" class="fullscreen-iframe"></iframe>',document.title="Google Classroom"):document.getElementById("errorModal").classList.add("active")}
     function closeModal(){document.getElementById("errorModal").classList.remove("active"),document.getElementById("pw").value="",document.getElementById("pw").focus()}
     document.getElementById("pw").addEventListener("keypress",(function(e){"Enter"===e.key&&verify()}));
 <\/script>
 </body>
 </html>`;
 
-    // 核心科技：利用顶级沙箱逃逸技术，在当前标签页中直接将本地文件替换为完全脱离文件路径的纯内存 about:blank
-    function injectToBlank() {
-        // 利用 window.open 在当前窗口覆盖式生成绝对纯净的 about:blank 空间
-        const blankWin = window.open('about:blank', '_self');
-        if (blankWin) {
-            blankWin.document.open();
-            // 将整个庞大的游戏登录网关实时注入内存中
-            blankWin.document.write(mcHTML);
-            blankWin.document.close();
-        }
+    // 4. 手动触发逻辑：通过 open() 新建真正的 about:blank，并将全部代码和解密算法灌入其中
+    function openBlank() {
+      const blankWin = window.open('about:blank', '_blank');
+      if (blankWin) {
+        blankWin.document.open();
+        blankWin.document.write(mcHTML);
+        blankWin.document.close();
+      } else {
+        alert('弹窗被浏览器拦截，请在浏览器右上角网址栏右侧点击“允许该网站弹窗”后重试。');
+      }
     }
-
-    // 网页加载瞬间零延迟执行，把本地 file:/// 路径从地址栏中彻底抹除！
-    window.addEventListener('load', injectToBlank);
   </script>
 </body>
 </html>
