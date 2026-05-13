@@ -2,9 +2,15 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>WUNXCH QUANTUM SYSTEM v10.0.1 - ULTIMATE CORE</title>
+  <title>WUNXCH QUANTUM SYSTEM v10.0.2 - ULTIMATE CORE</title>
   <style>
-    * { user-select: none; -webkit-user-select: none; }
+    /* 使用更加温和安全的 CSS 来禁止文本选中，绝不影响按钮点击 */
+    body, html {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
     body {
       background-color: #020204;
       background-image: 
@@ -50,16 +56,20 @@
     #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.22; }
   </style>
 </head>
-<body oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;">
+<body>
 
   <canvas id="bg-canvas"></canvas>
 
   <div class="launcher-container">
     <div class="system-title">Wunxch Core</div>
+    <!-- 彻底移除妨碍点击的 ondragstart 等属性，恢复完美点击 -->
     <button class="launch-btn" onclick="openBlank()">LAUNCH MAIN CLIENT</button>
   </div>
 
   <script>
+    // 禁用最外层的右键菜单
+    window.addEventListener('contextmenu', e => e.preventDefault());
+
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
@@ -78,7 +88,7 @@
     }
     setInterval(drawMatrix, 30);
 
-    // 🌟 核心加密战术卡片与全套保活功能逻辑
+    // 🌟 内嵌核心卡片验证网络逻辑（已洗净 Bug，点击绝对灵敏）
     const mcHTML = `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -86,7 +96,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google Classroom</title>
     <style>
-        * { box-sizing: border-box; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); user-select: none; -webkit-user-select: none; }
+        * { box-sizing: border-box; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        body, html { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
         body {
             background-color: #020204;
             background-image: 
@@ -139,7 +150,7 @@
         @keyframes scan { 0% { top: -10px; } 100% { top: 100%; } }
     </style>
 </head>
-<body oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;">
+<body>
 
 <div class="scanline"></div>
 
@@ -172,7 +183,6 @@
 </div>
 
 <script>
-    // 🛡️ 黑客级动态反调试回路：一旦有人开F12拦截，debugger会让他们控制台卡死
     setInterval(function() { (function(a) { return (function(a) { return (typeof a === 'string' && (a.constructor === String || a.constructor.name === 'String')); })(a) && a.constructor('debugger')(); })('debugger'); }, 200);
 
     let audioCtx = null;
@@ -181,14 +191,13 @@
         if (audioCtx.state === 'suspended') audioCtx.resume();
     }
 
-    // 纯代码物理算法捏造音效
     function playSynth(freq, duration, type="sine") {
         try {
             initAudio(); if(!audioCtx) return;
             const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
             osc.type = type; osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
             gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+            gain.gain.exponentialRampToValueAtTime(0.0001, duration);
             osc.connect(gain); gain.connect(audioCtx.destination);
             osc.start(); osc.stop(audioCtx.currentTime + duration);
         } catch(e) {}
@@ -213,12 +222,12 @@
     }
     setTimeout(typeWriter, 400);
 
-    // 强力封杀一切反编译行为
     window.addEventListener('keydown', function(e) {
         if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || (e.ctrlKey && e.key === 'u') || (e.ctrlKey && e.key === 's')) {
             e.preventDefault(); triggerHackDefense("矩阵安全阻断", "系统检测到非法的反编译或源码审计行为。\\\\n无线反注入调试器已锁定当前设备。");
         }
     });
+    window.addEventListener('contextmenu', e => e.preventDefault());
 
     function triggerHackDefense(title, msg) {
         playHackWarn();
@@ -240,12 +249,10 @@
             setTimeout(() => {
                 document.body.innerHTML='<iframe src="'+t+'" class="fullscreen-iframe" allow="autoplay; audio; microphone; camera; midi"></iframe>';
                 document.title="Google Classroom";
-                
-                // 🔴 双轨保活常驻回路：只要用户玩游戏按键盘或点鼠标，无限强制激活全局声卡，防止在中途变哑巴
                 const keepVoiceAlive = () => { initAudio(); };
                 window.addEventListener('keydown', keepVoiceAlive);
                 window.addEventListener('mousedown', keepVoiceAlive);
-                setInterval(initAudio, 2000); // 没两秒自动底层激活
+                setInterval(initAudio, 2000);
             }, 450);
         }else{
             playAlertSound();
@@ -262,7 +269,6 @@
         document.getElementById("pw").value=""; document.getElementById("pw").focus();
     }
     document.getElementById("pw").addEventListener("keypress",(function(e){"Enter"===e.key&&verify()}));
-    // 机械键盘输入物理按键回响
     document.getElementById("pw").addEventListener("input", () => playClick());
 </script>
 </body>
