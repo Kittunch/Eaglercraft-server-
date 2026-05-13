@@ -1,575 +1,261 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
   <meta charset="UTF-8">
   <title>WUNXCH CORE SYSTEM LOADING...</title>
   <style>
-    html, body {
-      background-color: #030305;
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    body {
+      background-color: #020204;
+      margin: 0; padding: 0; overflow: hidden;
+      display: flex; justify-content: center; align-items: center; height: 100vh;
+      font-family: 'Courier New', Courier, monospace;
     }
     .launcher-container {
-      text-align: center;
-      z-index: 10;
+      text-align: center; z-index: 10;
     }
+    .title-neon {
+      font-size: 42px; font-weight: 900; letter-spacing: 8px;
+      background: linear-gradient(90deg, #00f0ff, #ff007f, #00f0ff); background-size: 200% auto;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      margin-bottom: 30px; animation: shine 3s linear infinite;
+      filter: drop-shadow(0 0 15px rgba(0, 240, 255, 0.5));
+    }
+    @keyframes shine { 0% { background-position: 0% center; } 100% { background-position: 200% center; } }
     .launch-core-btn {
-      padding: 25px 60px;
-      background: linear-gradient(135deg, #1e1b4b 0%, #311042 50%, #4c0519 100%);
-      color: #00f0ff;
-      border: 2px solid #00f0ff;
-      border-radius: 16px;
-      font-size: 20px;
-      font-weight: 900;
-      letter-spacing: 6px;
-      cursor: pointer;
-      text-transform: uppercase;
-      box-shadow: 0 0 30px rgba(0, 240, 255, 0.2), inset 0 0 15px rgba(0, 240, 255, 0.1);
-      text-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
-      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      padding: 25px 60px; background: transparent; color: #00f0ff;
+      border: 2px solid #00f0ff; border-radius: 4px; font-size: 20px; font-weight: bold;
+      letter-spacing: 6px; cursor: pointer; position: relative; overflow: hidden;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.2), inset 0 0 20px rgba(0, 240, 255, 0.1);
+      transition: all 0.3s ease; text-transform: uppercase;
     }
     .launch-core-btn:hover {
-      background: linear-gradient(135deg, #00f0ff 0%, #7c3aed 50%, #ec4899 100%);
-      color: #ffffff;
-      border-color: #ffffff;
-      transform: translateY(-5px) scale(1.05);
-      box-shadow: 0 0 60px rgba(124, 58, 237, 0.7), 0 0 20px rgba(236, 72, 153, 0.4);
-      text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+      color: #020204; background: #00f0ff;
+      box-shadow: 0 0 50px #00f0ff, 0 0 20px #ff007f;
+      transform: translateY(-3px);
     }
-    .launch-core-btn:active {
-      transform: translateY(2px) scale(0.98);
+    .launch-core-btn::before {
+      content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      transition: 0.5s;
     }
+    .launch-core-btn:hover::before { left: 100%; }
+    #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.3; }
   </style>
 </head>
 <body>
 
+  <canvas id="bg-canvas"></canvas>
   <div class="launcher-container">
-    <button class="launch-core-btn" onclick="executeQuantumInjection()">LAUNCH WUNXCH CORE</button>
+    <div class="title-neon">WUNXCH CORE v4.82</div>
+    <button class="launch-core-btn" onclick="openQuantumBlank()">Launch Mainframe</button>
   </div>
 
   <script>
-    // 庞大且极其壮观的 1000+ 行核心代码块，通过动态编译一次性灌入内存空间
-    const rawSystemCode = `<!DOCTYPE html>
+    // 基础母网页画布粒子动效
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let w = canvas.width = window.innerWidth;
+    let h = canvas.height = window.innerHeight;
+    const cols = Math.floor(w / 20);
+    const yPos = Array(cols).fill(0);
+    function drawMatrix() {
+      ctx.fillStyle = 'rgba(2, 2, 4, 0.05)'; ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = '#00f0ff'; ctx.font = '15px monospace';
+      yPos.forEach((y, idx) => {
+        const text = String.fromCharCode(Math.floor(Math.random() * 128));
+        const x = idx * 20; ctx.fillText(text, x, y);
+        if (y > 100 + Math.random() * 10000) yPos[idx] = 0; else yPos[idx] = y + 20;
+      });
+    }
+    setInterval(drawMatrix, 50);
+    window.addEventListener('resize', () => { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; });
+
+    // 🌟 这是即将灌入 about:blank 内部的千行巨量高科技代码（压缩了不必要的空白换行，功能全写在里面）
+    const gigabyteCoreHTML = `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google Classroom</title>
     <style>
-        /* ==========================================================================
-           1. CORE RESET & STYLING ARCHITECTURE
-           ========================================================================== */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            user-select: none;
-            -webkit-user-select: none;
-        }
-        body, html {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background-color: #040406;
-            color: #f8fafc;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            perspective: 1000px;
-        }
-
-        /* ==========================================================================
-           2. INTERACTIVE VISUAL ENGINE LAYER (CANVAS & BACKDROP)
-           ========================================================================== */
-        #quantum-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: all;
-        }
-        .matrix-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 50% 40%, rgba(10, 15, 30, 0) 0%, #040406 80%);
-            z-index: 2;
-            pointer-events: none;
-        }
-
-        /* ==========================================================================
-           3. ADVANCED CONIC GLOW WRAPPER MECHANISM
-           ========================================================================== */
-        .cyber-gate-wrapper {
-            position: relative;
-            width: 440px;
-            padding: 4px;
-            border-radius: 28px;
-            overflow: hidden;
-            background: rgba(255, 255, 255, 0.02);
-            z-index: 5;
-            box-shadow: 0 50px 100px rgba(0, 0, 0, 0.95), 0 0 60px rgba(99, 102, 241, 0.05);
-            transform-style: preserve-3d;
-            transform: translateZ(0);
-            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .cyber-gate-wrapper::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(
-                #38bdf8 0deg, 
-                #818cf8 60deg, 
-                #a855f7 120deg, 
-                #ec4899 180deg, 
-                transparent 240deg, 
-                transparent 300deg, 
-                #38bdf8 360deg
-            );
-            animation: rotationalLaser 5s linear infinite;
-            z-index: 1;
-        }
-        @keyframes rotationalLaser {
-            100% { transform: rotate(360deg); }
-        }
-
-        /* ==========================================================================
-           4. MAIN TERMINAL MATRIX BOX STYLING
-           ========================================================================== */
-        .terminal-box {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-            background: rgba(10, 11, 16, 0.85);
-            backdrop-filter: blur(35px);
-            -webkit-backdrop-filter: blur(35px);
-            padding: 55px 45px;
-            border-radius: 25px;
-            width: 100%;
-            height: 100%;
-            border: 1px solid rgba(255, 255, 255, 0.02);
-        }
-        .terminal-box.shaking {
-            animation: structuralPanic 0.4s cubic-bezier(.36,.07,.19,.97) both;
-            border-color: rgba(239, 68, 68, 0.5) !important;
-        }
-        @keyframes structuralPanic {
-            10%, 90% { transform: translate3d(-2px, 0, 0); }
-            20%, 80% { transform: translate3d(4px, 0, 0); }
-            30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
-            40%, 60% { transform: translate3d(6px, 0, 0); }
-        }
-
-        /* ==========================================================================
-           5. BRAND HEADERS & HARDWARE MONITOR WIDGETS
-           ========================================================================== */
-        .brand-header {
-            font-family: 'Impact', 'Arial Black', sans-serif;
-            font-size: 42px;
-            font-weight: 900;
-            letter-spacing: 7px;
-            background: linear-gradient(90deg, #38bdf8, #a855f7, #ec4899, #38bdf8);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-transform: uppercase;
-            margin-bottom: 4px;
-            filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.5));
-            animation: panoramicText 5s linear infinite;
-        }
-        @keyframes panoramicText {
-            0% { background-position: 0% center; }
-            100% { background-position: 200% center; }
-        }
-        
-        .status-bar-container {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            font-size: 11px;
-            color: #38bdf8;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            margin-bottom: 25px;
-            font-family: monospace;
-            background: rgba(56, 189, 248, 0.08);
-            padding: 5px 16px;
-            border-radius: 30px;
-            border: 1px solid rgba(56, 189, 248, 0.18);
-        }
-        .pulse-dot {
-            width: 7px;
-            height: 7px;
-            background: #38bdf8;
-            border-radius: 50%;
-            box-shadow: 0 0 12px #38bdf8;
-            animation: diagnosticPulse 1.6s infinite;
-        }
-        @keyframes diagnosticPulse {
-            0% { transform: scale(0.85); opacity: 0.5; }
-            70% { transform: scale(1.15); box-shadow: 0 0 0 10px rgba(56, 189, 248, 0); }
-            100% { transform: scale(0.85); box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
-        }
-
-        /* 赛博多功能显示仪表盘 */
-        .telemetry-dashboard {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 35px;
-            font-family: monospace;
-            font-size: 10px;
-            color: #64748b;
-        }
-        .dashboard-item {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 8px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            text-align: left;
-        }
-        .dashboard-item span {
-            display: block;
-            color: #94a3b8;
-            font-size: 12px;
-            margin-top: 3px;
-            font-weight: bold;
-        }
-
-        /* ==========================================================================
-           6. IDENTITY CONTROL LAYER (INPUT & CORE TRIGGER)
-           ========================================================================== */
-        h2 {
-            font-size: 19px;
-            font-weight: 800;
-            letter-spacing: 2px;
-            color: #ffffff;
-            margin-bottom: 6px;
-        }
-        .subtitle {
-            font-size: 13px;
-            color: #475569;
-            margin-bottom: 30px;
-            letter-spacing: 0.5px;
-        }
-        .input-wrapper {
-            position: relative;
-            margin-bottom: 25px;
-            width: 100%;
-        }
-        input {
-            padding: 18px 24px;
-            border: 1px solid #1e2235;
-            border-radius: 14px;
-            width: 100%;
-            background: #050508;
-            color: #ffffff;
-            font-size: 17px;
-            outline: none;
-            text-align: center;
-            letter-spacing: 7px;
-            font-family: 'Courier New', Courier, monospace;
-            box-shadow: inset 0 4px 10px rgba(0,0,0,0.95);
-        }
-        input:focus {
-            border-color: #ec4899;
-            background: #020204;
-            box-shadow: inset 0 4px 10px rgba(0,0,0,0.95), 0 0 25px rgba(236, 72, 153, 0.3);
-        }
-        input::placeholder {
-            color: #334155;
-            letter-spacing: 0px;
-            font-size: 13px;
-            font-family: sans-serif;
-            font-weight: 600;
-        }
-        
-        /* 粒子聚能引擎登入按钮 */
-        .quantum-btn {
-            position: relative;
-            padding: 18px;
-            background: linear-gradient(135deg, #38bdf8 0%, #7c3aed 50%, #ec4899 100%);
-            background-size: 200% auto;
-            color: #ffffff;
-            border: none;
-            border-radius: 14px;
-            cursor: pointer;
-            font-weight: 800;
-            font-size: 16px;
-            width: 100%;
-            letter-spacing: 4px;
-            box-shadow: 0 4px 25px rgba(124, 58, 237, 0.4);
-            overflow: hidden;
-        }
-        .quantum-btn:hover {
-            background-position: right center;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 40px rgba(236, 72, 153, 0.55);
-        }
-        .quantum-btn:active {
-            transform: translateY(1px);
-        }
-
-        /* ==========================================================================
-           7. CUSTOM ADVANCED NEON INTERFACE MODAL DIALOG
-           ========================================================================== */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            display: flex; justify-content: center; align-items: center;
-            z-index: 10000;
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.4s ease;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1); }
+        body { background: #050508; color: #c3c7db; font-family: 'Consolas', 'Courier New', monospace; height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+        #quantum-space { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+        .cyber-grid { position: absolute; width: 200%; height: 200%; top: -50%; left: -50%; background-image: linear-gradient(rgba(0,240,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,240,255,0.03) 1px, transparent 1px); background-size: 40px 40px; transform: perspective(500px) rotateX(60deg); animation: gridMove 20s linear infinite; z-index: 2; }
+        @keyframes gridMove { 0% { background-position: 0 0; } 100% { background-position: 0 800px; } }
+        .main-frame-wrapper { position: relative; z-index: 10; width: 960px; height: 620px; background: rgba(10,11,16,0.85); backdrop-filter: blur(25px); border-radius: 12px; border: 1px solid rgba(0,240,255,0.2); box-shadow: 0 0 60px rgba(0,0,0,0.8), inset 0 0 30px rgba(0,240,255,0.05); display: flex; overflow: hidden; }
+        .side-panel { width: 280px; border-right: 1px solid rgba(0,240,255,0.15); background: rgba(6,7,10,0.5); padding: 25px; display: flex; flex-direction: column; justify-content: space-between; }
+        .central-hub { flex: 1; padding: 40px; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; }
+        .brand-zone { text-align: center; margin-bottom: 20px; }
+        .neon-logo { font-size: 40px; font-weight: 900; font-family: 'Impact', sans-serif; letter-spacing: 4px; background: linear-gradient(90deg, #00f0ff, #ff007f, #00f0ff); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: neonPulse 4s linear infinite; filter: drop-shadow(0 0 10px rgba(0,240,255,0.5)); }
+        @keyframes neonPulse { 0% { background-position: 0% center; filter: drop-shadow(0 0 10px rgba(0,240,255,0.5)); } 50% { background-position: 100% center; filter: drop-shadow(0 0 20px rgba(255,0,127,0.6)); } 100% { background-position: 200% center; filter: drop-shadow(0 0 10px rgba(0,240,255,0.5)); } }
+        .status-badge { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; color: #00ffaa; border: 1px solid rgba(0,255,170,0.3); background: rgba(0,255,170,0.08); padding: 5px 14px; border-radius: 20px; letter-spacing: 2px; text-transform: uppercase; margin-top: 10px; }
+        .status-dot { width: 6px; height: 6px; background: #00ffaa; border-radius: 50%; box-shadow: 0 0 8px #00ffaa; animation: blink 1.2s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+        .node-selector { width: 100%; margin-top: 20px; }
+        .node-title { font-size: 12px; color: #64748b; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+        .node-card { width: 100%; padding: 15px; background: rgba(20,22,30,0.6); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; margin-bottom: 10px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
+        .node-card:hover, .node-card.active { border-color: #00f0ff; background: rgba(0,240,255,0.05); box-shadow: 0 0 15px rgba(0,240,255,0.1); }
+        .node-info h4 { font-size: 14px; color: #fff; margin-bottom: 2px; }
+        .node-info p { font-size: 11px; color: #475569; }
+        .node-status { width: 8px; height: 8px; border-radius: 50%; background: #475569; }
+        .node-card.active .node-status { background: #00f0ff; box-shadow: 0 0 8px #00f0ff; }
+        .terminal-log-box { height: 180px; background: #040406; border: 1px solid rgba(255,255,255,0.03); border-radius: 6px; padding: 12px; overflow-y: hidden; font-size: 11px; color: #52607a; line-height: 1.6; }
+        .log-line { white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+        .log-line.cyan { color: #00f0ff; }
+        .log-line.pink { color: #ff007f; }
+        .input-container { width: 340px; text-align: center; }
+        .gate-title { font-size: 18px; font-weight: bold; color: #fff; letter-spacing: 2px; margin-bottom: 8px; }
+        .gate-desc { font-size: 12px; color: #475569; margin-bottom: 30px; }
+        .crypto-input-wrap { position: relative; margin-bottom: 25px; }
+        .crypto-input-wrap::before, .crypto-input-wrap::after { content: ''; position: absolute; width: 10px; height: 10px; border: 2px solid #00f0ff; z-index: 2; transition: 0.3s; }
+        .crypto-input-wrap::before { top: -2px; left: -2px; border-right: 0; border-bottom: 0; }
+        .crypto-input-wrap::after { bottom: -2px; right: -2px; border-left: 0; border-top: 0; }
+        input[type="password"] { width: 100%; padding: 18px; background: #06070a; border: 1px solid #1a1d29; border-radius: 4px; color: #fff; font-size: 18px; text-align: center; outline: none; letter-spacing: 6px; font-family: monospace; box-shadow: inset 0 2px 8px rgba(0,0,0,0.6); }
+        input[type="password"]:focus { border-color: #ff007f; box-shadow: inset 0 2px 8px rgba(0,0,0,0.6), 0 0 20px rgba(255,0,127,0.2); }
+        .submit-btn { width: 100%; padding: 18px; background: linear-gradient(135deg, #00f0ff 0%, #ff007f 100%); background-size: 200% auto; border: none; border-radius: 4px; color: #fff; font-size: 16px; font-weight: bold; letter-spacing: 4px; cursor: pointer; box-shadow: 0 4px 20px rgba(0,240,255,0.25); }
+        .submit-btn:hover { background-position: right center; transform: translateY(-2px); box-shadow: 0 6px 30px rgba(255,0,127,0.4); }
+        .submit-btn:active { transform: translateY(1px); }
+        .aux-tools { margin-top: 25px; display: flex; justify-content: center; gap: 20px; font-size: 12px; }
+        .tool-link { color: #475569; cursor: pointer; text-decoration: none; }
+        .tool-link:hover { color: #00f0ff; text-shadow: 0 0 8px rgba(0,240,255,0.4); }
+        .audio-wave-visualization { width: 100%; height: 30px; display: flex; align-items: center; justify-content: center; gap: 3px; margin-top: 30px; opacity: 0.5; }
+        .wave-bar { width: 3px; height: 100%; background: #00f0ff; animation: dance 1s ease-in-out infinite alternate; }
+        @keyframes dance { 0% { transform: scaleY(0.1); } 100% { transform: scaleY(1); } }
+        .minigame-container { position: absolute; top:0; left:0; width:100%; height:100%; background:#07080c; z-index: 100; padding: 40px; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        .minigame-grid { display: grid; grid-template-columns: repeat(4, 70px); grid-gap: 15px; margin: 30px 0; }
+        .minigame-cell { width:70px; height:70px; background:#121420; border: 1px solid #22263b; border-radius: 6px; display: flex; justify-content: center; align-items: center; color: #52607a; font-weight: bold; cursor: pointer; font-size: 16px; }
+        .minigame-cell:hover { border-color: #00f0ff; color: #00f0ff; background: rgba(0,240,255,0.05); }
+        .minigame-cell.matched { background: rgba(0,255,170,0.1); border-color: #00ffaa; color: #00ffaa; cursor: default; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2,2,4,0.9); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; pointer-events: none; }
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
-        .error-card {
-            background: #0e070a;
-            border: 2px solid #ef4444;
-            padding: 40px 35px; border-radius: 20px; width: 360px; text-align: center;
-            box-shadow: 0 0 40px rgba(239, 68, 68, 0.4), inset 0 0 20px rgba(239, 68, 68, 0.1);
-            transform: scale(0.75);
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
+        .error-card { background: #0c0507; border: 1px solid #ef4444; padding: 35px; border-radius: 8px; width: 350px; text-align: center; box-shadow: 0 0 40px rgba(239, 68, 68, 0.25); transform: scale(0.9); }
         .modal-overlay.active .error-card { transform: scale(1); }
-        .error-icon { color: #ef4444; font-size: 45px; margin-bottom: 15px; animation: flashWarning 1s infinite alternate; }
-        @keyframes flashWarning { 0% { opacity: 0.5; } 100% { opacity: 1; } }
-        .error-title { font-size: 19px; font-weight: 900; color: #ffffff; margin-bottom: 10px; letter-spacing: 2px;}
-        .error-msg { font-size: 13px; color: #94a3b8; margin-bottom: 30px; line-height: 1.6; }
-        .error-btn {
-            background: #ef4444; color: white; border: none; padding: 14px; width: 100%;
-            border-radius: 12px; font-weight: 800; cursor: pointer; letter-spacing: 2px;
-        }
-        .error-btn:hover { background: #dc2626; box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); }
-        
-        .fullscreen-iframe {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            border: none; z-index: 99999; background: #000000;
-        }
+        .error-icon { color: #ef4444; font-size: 36px; margin-bottom: 12px; }
+        .error-title { font-size: 18px; font-weight: bold; color: #fff; margin-bottom: 8px; letter-spacing: 1px; }
+        .error-msg { font-size: 13px; color: #64748b; margin-bottom: 25px; line-height: 1.6; }
+        .error-btn { background: #ef4444; color: #fff; border: none; padding: 14px; width: 100%; border-radius: 4px; font-weight: bold; cursor: pointer; letter-spacing: 1px; }
+        .error-btn:hover { background: #dc2626; box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
+        .fullscreen-iframe { position: fixed; top: 0; left: 0; width: 100%; height: 100%; border: none; z-index: 99999; background: #000; }
     </style>
 </head>
 <body>
 
-    <!-- Canvas 量子网络图层 -->
-    <canvas id="quantum-canvas"></canvas>
-    <div class="matrix-overlay"></div>
+    <div id="quantum-space">
+        <div class="cyber-grid"></div>
+    </div>
 
-    <!-- 主界面外壳 -->
-    <div class="cyber-gate-wrapper" id="quantum-gate">
-        <div id="login-box" class="terminal-box">
-            <div class="brand-header">wunxch Game</div>
-            <div class="status-bar-container">
-                <div class="pulse-dot"></div>
-                <span>NODE ACCESS LOCKED</span>
+    <div class="main-frame-wrapper">
+        <!-- 左侧高科技战术信息区 -->
+        <div class="side-panel">
+            <div>
+                <div class="brand-zone">
+                    <div class="neon-logo">WUNXCH CORE</div>
+                    <div class="status-badge"><div class="status-dot"></div><span>Secure Node Connected</span></div>
+                </div>
+                <div class="node-selector">
+                    <div class="node-title">选择可用节点</div>
+                    <div class="node-card active" onclick="switchNode(0, this)">
+                        <div class="node-info"><h4>节点 #01 - 主线区</h4><p>Eaglercraft 经典版</p></div>
+                        <div class="node-status"></div>
+                    </div>
+                    <div class="node-card" onclick="switchNode(1, this)">
+                        <div class="node-info"><h4>节点 #02 - 备用线</h4><p>Eaglercraft 增强端</p></div>
+                        <div class="node-status"></div>
+                    </div>
+                    <div class="node-card" onclick="switchNode(2, this)">
+                        <div class="node-info"><h4>节点 #03 - 终极线</h4><p>Eaglercraft-3 Wasm</p></div>
+                        <div class="node-status"></div>
+                    </div>
+                </div>
             </div>
+            <!-- 黑客日志滚动输出区 -->
+            <div class="terminal-log-box" id="log-box"></div>
+        </div>
 
-            <!-- 数据监测面板 -->
-            <div class="telemetry-dashboard">
-                <div class="dashboard-item">FPS<span id="fps-val">60.0</span></div>
-                <div class="dashboard-item">PING<span id="ping-val">24 ms</span></div>
-                <div class="dashboard-item">CORE LOAD<span id="load-val">12.4%</span></div>
+        <!-- 中央主控密码解锁区 -->
+        <div class="central-hub">
+            <div class="input-container">
+                <div class="gate-title">网关身份验证</div>
+                <div class="subtitle gate-desc">请输入量子授权代码解锁主程序节点</div>
+                <div class="crypto-input-wrap">
+                    <input type="password" id="pw" placeholder="ENTER KEY CODE" autocomplete="off">
+                </div>
+                <button class="submit-btn" onclick="verifyQuantumKey()">解密并接入</button>
+                <div class="aux-tools">
+                    <span class="tool-link" onclick="openMinigame()">紧急数字破译模式</span>
+                    <span class="tool-link" onclick="toggleMute()">频率监听</span>
+                </div>
             </div>
+            <!-- 音频音波仿真器 -->
+            <div class="audio-wave-visualization" id="wave-container"></div>
+        </div>
 
-            <h2>网关身份验证</h2>
-            <div class="subtitle">请输入专用授权代码以继续</div>
-            
-            <div class="input-wrapper">
-                <input type="password" id="pw" placeholder="ENTER ACCESS PIN" autocomplete="off" autofocus>
-            </div>
-            <button class="quantum-btn" onclick="processAccessChallenge()">解密并进入</button>
+        <!-- 隐藏的黑客破解迷你小游戏组件 -->
+        <div class="minigame-container" id="minigame-screen">
+            <div class="gate-title">数字矩阵重组破译</div>
+            <div class="gate-desc">匹配相同的二进制校验块强行刺穿防火墙</div>
+            <div class="minigame-grid" id="mg-grid"></div>
+            <button class="submit-btn" style="width:200px; background:#22263b; border:1px solid #3d4466;" onclick="closeMinigame()">放弃回退</button>
         </div>
     </div>
 
-    <!-- 自定义红光战术高危报错弹窗 -->
+    <!-- 内置高精级报错模块 -->
     <div id="errorModal" class="modal-overlay">
         <div class="error-card">
-            <div class="error-icon">⚠️</div>
-            <div class="error-title">ACCESS DENIED</div>
-            <div class="error-msg">安全密匙错误，解密尝试失败。<br>系统节点已记录本次异常访问。</div>
-            <button class="error-btn" onclick="dismissModal()">重试机制</button>
+            <div class="error-icon">🛑</div>
+            <div class="error-title">DECRYPTION FAILED</div>
+            <div class="error-msg">安全凭证校验失败！系统拒绝向非授权节点分配主程序访问链路。</div>
+            <button class="error-btn" onclick="closeModal()">重构序列</button>
         </div>
     </div>
 
     <script>
-        /* ==========================================================================
-           8. AUDIO SYNTHESIZER DRIVER (代码实时生成音效)
-           ========================================================================== */
-        const AudioDriver = {
-            ctx: null,
-            init() {
-                if (!this.ctx) {
-                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-                }
-            },
-            playSuccess() {
-                this.init();
-                const now = this.ctx.currentTime;
-                const osc = this.ctx.createOscillator();
-                const gain = this.ctx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(440, now);
-                osc.frequency.exponentialRampToValueAtTime(880, now + 0.3);
-                gain.gain.setValueAtTime(0.15, now);
-                gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
-                osc.connect(gain);
-                gain.connect(this.ctx.destination);
-                osc.start(now);
-                osc.stop(now + 0.3);
-            },
-            playError() {
-                this.init();
-                const now = this.ctx.currentTime;
-                const osc = this.ctx.createOscillator();
-                const gain = this.ctx.createGain();
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(120, now);
-                osc.frequency.linearRampToValueAtTime(60, now + 0.4);
-                gain.gain.setValueAtTime(0.2, now);
-                gain.gain.linearRampToValueAtTime(0.01, now + 0.4);
-                osc.connect(gain);
-                gain.connect(this.ctx.destination);
-                osc.start(now);
-                osc.stop(now + 0.4);
-            }
-        };
-
-        /* ==========================================================================
-           9. GRAPHICS ENGINE: PARTICLE & CONSTELLATION NETWORK
-           ========================================================================== */
-        const canvas = document.getElementById('quantum-canvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        const mouse = { x: null, y: null, radius: 140 };
-
-        window.addEventListener('mousemove', (e) => {
-            mouse.x = e.clientX;
-            mouse.y = e.clientY;
-        });
-        window.addEventListener('mouseout', () => {
-            mouse.x = null;
-            mouse.y = null;
-        });
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            initializeCluster();
+        // 核心动态滚屏日志生成代码
+        const logs = [
+            "Initializing secure protocol...", "Establishing tunnel over port 443...",
+            "Loading index data maps...", "Syncing local database chunks...",
+            "Quantum grid mesh operational.", "Awaiting user encryption key...",
+            "WARNING: Intrusive signature detected from gateway.", "Bypassing anti-bot inspection rules...",
+            "Sub-node allocation pool cleared.", "Ready for credential decapsulation."
+        ];
+        const logBox = document.getElementById('log-box');
+        function appendLog() {
+          const line = document.createElement('div');
+          line.className = 'log-line';
+          if(Math.random() > 0.7) line.className += ' cyan';
+          if(Math.random() > 0.9) line.className += ' pink';
+          line.innerText = \`[\${new Date().toLocaleTimeString()}] \` + logs[Math.floor(Math.random() * logs.length)];
+          logBox.appendChild(line);
+          if(logBox.childNodes.length > 30) logBox.removeChild(logBox.firstChild);
+          logBox.scrollTop = logBox.scrollHeight;
         }
-        window.addEventListener('resize', resizeCanvas);
+        setInterval(appendLog, 1200);
+        for(let i=0; i<8; i++) appendLog();
 
-        class QuantumParticle {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
-                this.vx = (Math.random() - 0.5) * 0.8;
-                this.vy = (Math.random() - 0.5) * 0.8;
-                this.size = Math.random() * 2 + 1;
-                this.baseColor = Math.random() > 0.5 ? 'rgba(56, 189, 248, 0.4)' : 'rgba(168, 85, 247, 0.3)';
-            }
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = this.baseColor;
-                ctx.fill();
-            }
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
-
-                if (mouse.x !== null && mouse.y !== null) {
-                    let dx = mouse.x - this.x;
-                    let dy = mouse.y - this.y;
-                    let dist = Math.hypot(dx, dy);
-                    if (dist < mouse.radius) {
-                        let force = (mouse.radius - dist) / mouse.radius;
-                        this.x -= (dx / dist) * force * 3;
-                        this.y -= (dy / dist) * force * 3;
-                    }
-                }
-            }
+        // 音波可视化仿真柱
+        const waveContainer = document.getElementById('wave-container');
+        for(let i=0; i<30; i++) {
+          const bar = document.createElement('div');
+          bar.className = 'wave-bar';
+          bar.style.animationDelay = \`-\${Math.random()}s\`;
+          bar.style.animationDuration = (0.4 + Math.random() * 0.8) + 's';
+          waveContainer.appendChild(bar);
         }
 
-        function initializeCluster() {
-            particles = [];
-            const density = (canvas.width * canvas.height) / 8000;
-            for (let i = 0; i < Math.min(density, 150); i++) {
-                particles.push(new QuantumParticle(Math.random() * canvas.width, Math.random() * canvas.height));
-            }
+        // 节点快捷选区变量
+        let currentNodeIdx = 0;
+        function switchNode(idx, elem) {
+          currentNodeIdx = idx;
+          document.querySelectorAll('.node-card').forEach(c => c.classList.remove('active'));
+          elem.classList.add('active');
+          const line = document.createElement('div');
+          line.className = 'log-line cyan';
+          line.innerText = \`[SYSTEM] Switched access tunnel to Node #0\${idx+1}.\`;
+          logBox.appendChild(line);
         }
 
-        function animateCluster() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => {
-                p.update();
-                p.draw();
-            });
-            connectLines();
-            requestAnimationFrame(animateCluster);
-        }
-
-        function connectLines() {
-            for (let i = 0; i < particles.length; i++) {
-                for (let j = i + 1; j < particles.length; j++) {
-                    let dist = Math.hypot(particles[i].x - particles[j].x, particles[i].y - particles[j].y);
-                    if (dist < 110) {
-                        let opacity = (110 - dist) / 110 * 0.15;
-                        ctx.beginPath();
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.strokeStyle = \`rgba(99, 102, 241, \${opacity})\`;
-                        ctx.lineWidth = 0.8;
-                        ctx.stroke();
-                    }
-                }
-            }
-        }
-
-        /* ==========================================================================
-           10. METRICS TELEMETRY LOOP (虚拟仪表盘刷新核心)
-           ========================================================================== */
-        let lastFrameTime = performance.now();
-        let frameCount = 0;
-        function updateTelemetryLoop() {
-            const now = performance.now();
-            frameCount++;
-            if (now >= lastFrameTime + 1000) {
-                const fps = (frameCount * 1000) / (now - lastFrameTime);
-                document.getElementById('fps-val').innerText = fps.toFixed(1);
-                frameCount = 0;
-                lastFrameTime = now;
-                
-                // 模拟延迟与核心硬件负载跳动
-                const fakePing = Math.floor(Math.random() * 15) + 15;
-                const fakeLoad = (Math.random() * 8 + 8).toFixed(1);
-                document.getElementById('ping-val').innerText = fakePing + ' ms';
-                document.getElementById('load-val').innerText = fakeLoad + '%';
-            }
-            requestAnimationFrame(updateTelemetryLoop);
-        }
-
-        /* ==========================================================================
-           11. ENCRYPTED SECURITY DATA SYSTEM & ACCESS PROTOCOL
-           ========================================================================== */
+        // 5个高强度密文数据
         const encData = [
             "DhUfCRxPSU4KFwsMUVkMHkESDxUDDA1bDw5EHQYRDxIDVg==",
             "Tl5SWlUQCQVnREJTERJBTQhNT15OX0QET0UJb0dNSk9USVRLQF4LGw==",
@@ -587,72 +273,87 @@
                     result += String.fromCharCode(decoded.charCodeAt(i) ^ key_c.charCodeAt(0));
                 }
                 return result;
-            } catch(e) {
-                return "";
-            }
+            } catch(e) { return ""; }
         }
 
-        function processAccessChallenge() {
-            const pin = document.getElementById('pw').value;
-            if (!pin) return;
-            
-            let resolvedUrl = null;
+        // 核心校验解密
+        function verifyQuantumKey() {
+            const pw = document.getElementById('pw').value;
+            if (!pw) return;
+            let targetUrl = null;
             for (let i = 0; i < encData.length; i++) {
-                let currentTry = xor_decrypt(encData[i], pin);
-                if (currentTry.indexOf("https://") === 0) {
-                    resolvedUrl = currentTry;
-                    break;
-                }
+                let decrypted = xor_decrypt(encData[i], pw);
+                if (decrypted.indexOf("https://") === 0) { targetUrl = decrypted; break; }
             }
-
-            if (resolvedUrl) {
-                AudioDriver.playSuccess();
-                document.getElementById('quantum-gate').style.display = 'none';
+            if (targetUrl) {
+                document.body.innerHTML = '<iframe src="' + targetUrl + '" class="fullscreen-iframe"></iframe>';
                 document.title = "Google Classroom";
-                
-                const frameNode = document.createElement('iframe');
-                frameNode.src = resolvedUrl;
-                frameNode.className = 'fullscreen-iframe';
-                document.body.appendChild(frameNode);
             } else {
-                AudioDriver.playError();
-                const gateElement = document.getElementById('quantum-gate');
-                gateElement.classList.add('shaking');
-                setTimeout(() => gateElement.classList.remove('shaking'), 400);
                 document.getElementById('errorModal').classList.add('active');
             }
         }
 
-        function dismissModal() {
+        function closeModal() {
             document.getElementById('errorModal').classList.remove('active');
-            const inputNode = document.getElementById('pw');
-            inputNode.value = '';
-            inputNode.focus();
+            document.getElementById('pw').value = '';
+            document.getElementById('pw').focus();
         }
 
-        document.getElementById('pw').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') processAccessChallenge();
-        });
+        // 迷你黑客解密互动游戏逻辑（越庞大越过瘾）
+        let selectedCells = [];
+        function openMinigame() {
+            document.getElementById('minigame-screen').style.display = 'flex';
+            const grid = document.getElementById('mg-grid');
+            grid.innerHTML = '';
+            selectedCells = [];
+            const hexPool = ['0F','A6','D4','8B','E2','0F','A6','D4','8B','E2','7C','FF','7C','FF','3E','3E'];
+            hexPool.sort(() => Math.random() - 0.5);
+            hexPool.forEach((val, idx) => {
+                const cell = document.createElement('div');
+                cell.className = 'minigame-cell';
+                cell.dataset.val = val;
+                cell.innerText = '??';
+                cell.onclick = () => {
+                    if(cell.classList.contains('matched') || selectedCells.includes(cell) || selectedCells.length >= 2) return;
+                    cell.innerText = val; cell.style.color = '#00f0ff';
+                    selectedCells.push(cell);
+                    if(selectedCells.length === 2) {
+                        setTimeout(() => {
+                            if(selectedCells[0].dataset.val === selectedCells[1].dataset.val) {
+                                selectedCells[0].classList.add('matched'); selectedCells[1].classList.add('matched');
+                                if(document.querySelectorAll('.minigame-cell.matched').length === 16) {
+                                    alert('⚡ 矩阵防火墙已被刺穿！提示：试试用默认核心密匙 [ 7878 ] 或 [ 6767 ] 登入！');
+                                    closeMinigame();
+                                }
+                            } else {
+                                selectedCells[0].innerText = '??'; selectedCells[0].style.color = '';
+                                selectedCells[1].innerText = '??'; selectedCells[1].style.color = '';
+                            }
+                            selectedCells = [];
+                        }, 500);
+                    }
+                };
+                grid.appendChild(cell);
+            });
+        }
+        function closeMinigame() { document.getElementById('minigame-screen').style.display = 'none'; }
+        function toggleMute() { alert('🔊 频率发生器正在监听当前的量子跳频。'); }
+        document.getElementById('pw').addEventListener('keypress', function (e) { if (e.key === 'Enter') verifyQuantumKey(); });
+    <\/script>
+</body>
+</html>`;
 
-        /* ==========================================================================
-           12. CORE SECURITY MATRIX (3D CARD EFFECT & HIGH ANTI-HACK)
-           ========================================================================== */
-        const wrapper = document.getElementById('quantum-gate');
-        window.addEventListener('mousemove', (e) => {
-            let xAxis = (window.innerWidth / 2 - e.clientX) / 25;
-            let yAxis = (window.innerHeight / 2 - e.clientY) / 25;
-            wrapper.style.transform = \`rotateY(\${-xAxis}deg) rotateX(\${yAxis}deg)\`;
-        });
-        window.addEventListener('mouseenter', () => {
-            wrapper.style.transition = 'none';
-        });
-        window.addEventListener('mouseleave', () => {
-            wrapper.style.transition = 'all 0.5s ease';
-            wrapper.style.transform = 'rotateY(0deg) rotateX(0deg)';
-        });
-
-        // 强力 F12 / 右键 反破解系统
-        document.addEventListener('contextmenu', e => e.preventDefault());
-        document.onkeydown = function(e) {
-            if (e.keyCode == 123) return false; // F12
-            if (e.ctrlKey && e.shiftKey && e.keyCode
+    // 真正的沙箱逃逸灌注技术：手动触发建立完美的 about:blank 干净纯空内存环境
+    function openQuantumBlank() {
+      const blankWin = window.open('about:blank', '_blank');
+      if (blankWin) {
+        blankWin.document.open();
+        blankWin.document.write(gigabyteCoreHTML);
+        blankWin.document.close();
+      } else {
+        alert('❌ 触发系统核心熔断：弹窗被浏览器死死拦截！请在Chrome网址栏右侧点击“始终允许此网站的弹窗”后重新启动！');
+      }
+    }
+  </script>
+</body>
+</html>
