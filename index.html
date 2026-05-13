@@ -1,14 +1,25 @@
 <!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>系统加载中...</title>
+  <style>
+    /* 让最开始的文件网页变黑，彻底隐藏任何加载痕迹 */
+    body { background-color: #030305; margin: 0; padding: 0; overflow: hidden; }
+  </style>
+</head>
+<body>
+
+  <script>
+    // 这是核心的网关与游戏代码，将被强行灌入内存，完全隔断文件路径
+    const mcHTML = `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google Classroom</title>
     <style>
-        * {
-            box-sizing: border-box;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
+        * { box-sizing: border-box; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
         body {
             background-color: #030305;
             background-image: 
@@ -17,286 +28,102 @@
                 radial-gradient(circle at 50% 30%, rgba(99, 102, 241, 0.2) 0%, transparent 50%),
                 radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.15) 0%, transparent 50%);
             background-size: 30px 30px, 30px 30px, auto, auto;
-            color: #f1f5f9;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
+            color: #f1f5f9; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden;
         }
-        /* wunxch Game 渐变拉丝闪烁霓虹字 */
         .brand-header {
-            font-family: 'Impact', 'Arial Black', sans-serif;
-            font-size: 38px;
-            font-weight: 900;
-            letter-spacing: 6px;
-            background: linear-gradient(90deg, #38bdf8, #ec4899, #38bdf8);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-transform: uppercase;
-            margin-bottom: 2px;
-            filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.6));
-            animation: flowText 4s linear infinite;
+            font-family: 'Impact', 'Arial Black', sans-serif; font-size: 38px; font-weight: 900; letter-spacing: 6px;
+            background: linear-gradient(90deg, #38bdf8, #ec4899, #38bdf8); background-size: 200% auto;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; margin-bottom: 2px;
+            filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.6)); animation: flowText 4s linear infinite;
         }
-        @keyframes flowText {
-            0% { background-position: 0% center; }
-            100% { background-position: 200% center; }
-        }
-        /* 安全终端指示栏 */
+        @keyframes flowText { 0% { background-position: 0% center; } 100% { background-position: 200% center; } }
         .status-bar {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-size: 11px;
-            color: #38bdf8;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            margin-bottom: 40px;
-            font-family: monospace;
-            background: rgba(56, 189, 248, 0.1);
-            padding: 4px 14px;
-            border-radius: 20px;
-            border: 1px solid rgba(56, 189, 248, 0.2);
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 11px; color: #38bdf8;
+            text-transform: uppercase; letter-spacing: 3px; margin-bottom: 40px; font-family: monospace;
+            background: rgba(56, 189, 248, 0.1); padding: 4px 14px; border-radius: 20px; border: 1px solid rgba(56, 189, 248, 0.2);
         }
-        .pulse-dot {
-            width: 6px;
-            height: 6px;
-            background: #38bdf8;
-            border-radius: 50%;
-            box-shadow: 0 0 10px #38bdf8;
-            animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse {
-            0% { transform: scale(0.9); opacity: 0.6; }
-            73% { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(56, 189, 248, 0); }
-            100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
-        }
-        /* 史诗级流光环绕卡片外壳 */
-        .glow-wrapper {
-            position: relative;
-            width: 410px;
-            padding: 3px;
-            border-radius: 26px;
-            overflow: hidden;
-            background: rgba(255, 255, 255, 0.03);
-            box-shadow: 0 40px 90px rgba(0, 0, 0, 0.9);
-        }
-        .glow-wrapper::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(#38bdf8, #a855f7, #ec4899, transparent, transparent, #38bdf8);
-            animation: rotateGlow 4s linear infinite;
-            z-index: 1;
-        }
-        @keyframes rotateGlow {
-            100% { transform: rotate(360deg); }
-        }
-        /* 内部机甲暗黑毛玻璃层 */
-        .box {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-            background: #0b0c10;
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            padding: 50px 45px;
-            border-radius: 24px;
-        }
-        h2 {
-            margin: 0 0 8px 0;
-            font-size: 20px;
-            font-weight: 800;
-            letter-spacing: 2px;
-            color: #ffffff;
-        }
-        .subtitle {
-            font-size: 13px;
-            color: #475569;
-            margin-bottom: 40px;
-            letter-spacing: 0.5px;
-        }
-        /* 高阶黑客下沉式输入框 */
-        .input-group {
-            position: relative;
-            margin-bottom: 30px;
-        }
-        input {
-            padding: 18px 20px;
-            border: 1px solid #1e2230;
-            border-radius: 14px;
-            width: 100%;
-            background: #050508;
-            color: #ffffff;
-            font-size: 16px;
-            outline: none;
-            text-align: center;
-            letter-spacing: 6px;
-            font-family: 'Courier New', Courier, monospace;
-            box-shadow: inset 0 4px 8px rgba(0,0,0,0.9);
-        }
-        input:focus {
-            border-color: #ec4899;
-            background: #020203;
-            box-shadow: inset 0 4px 8px rgba(0,0,0,0.9), 0 0 25px rgba(236, 72, 153, 0.35);
-        }
-        input::placeholder {
-            color: #334155;
-            letter-spacing: 0px;
-            font-size: 13px;
-            font-family: sans-serif;
-            font-weight: 600;
-        }
-        /* 超能粒子引擎流光按钮 */
-        button {
-            padding: 18px;
-            background: linear-gradient(135deg, #38bdf8 0%, #7c3aed 50%, #ec4899 100%);
-            background-size: 200% auto;
-            color: #ffffff;
-            border: none;
-            border-radius: 14px;
-            cursor: pointer;
-            font-weight: 800;
-            font-size: 16px;
-            width: 100%;
-            letter-spacing: 4px;
-            box-shadow: 0 4px 25px rgba(124, 58, 237, 0.4);
-        }
-        button:hover {
-            background-position: right center;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 35px rgba(236, 72, 153, 0.6);
-        }
-        button:active {
-            transform: translateY(1px);
-        }
-        /* 内置科技型警报弹窗组件 */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(8px);
-            display: flex; justify-content: center; align-items: center;
-            z-index: 10000;
-            opacity: 0; pointer-events: none;
-        }
+        .pulse-dot { width: 6px; height: 6px; background: #38bdf8; border-radius: 50%; box-shadow: 0 0 10px #38bdf8; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { transform: scale(0.9); opacity: 0.6; } 73% { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(56, 189, 248, 0); } 100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); } }
+        .glow-wrapper { position: relative; width: 410px; padding: 3px; border-radius: 26px; overflow: hidden; background: rgba(255, 255, 255, 0.03); box-shadow: 0 40px 90px rgba(0, 0, 0, 0.9); }
+        .glow-wrapper::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(#38bdf8, #a855f7, #ec4899, transparent, transparent, #38bdf8); animation: rotateGlow 4s linear infinite; z-index: 1; }
+        @keyframes rotateGlow { 100% { transform: rotate(360deg); } }
+        .box { position: relative; z-index: 2; text-align: center; background: #0b0c10; backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); padding: 50px 45px; border-radius: 24px; }
+        h2 { margin: 0 0 8px 0; font-size: 20px; font-weight: 800; letter-spacing: 2px; color: #ffffff; }
+        .subtitle { font-size: 13px; color: #475569; margin-bottom: 40px; letter-spacing: 0.5px; }
+        .input-group { position: relative; margin-bottom: 30px; }
+        input { padding: 18px 20px; border: 1px solid #1e2230; border-radius: 14px; width: 100%; background: #050508; color: #ffffff; font-size: 16px; outline: none; text-align: center; letter-spacing: 6px; font-family: 'Courier New', Courier, monospace; box-shadow: inset 0 4px 8px rgba(0,0,0,0.9); }
+        input:focus { border-color: #ec4899; background: #020203; box-shadow: inset 0 4px 8px rgba(0,0,0,0.9), 0 0 25px rgba(236, 72, 153, 0.35); }
+        input::placeholder { color: #334155; letter-spacing: 0px; font-size: 13px; font-family: sans-serif; font-weight: 600; }
+        button { padding: 18px; background: linear-gradient(135deg, #38bdf8 0%, #7c3aed 50%, #ec4899 100%); background-size: 200% auto; color: #ffffff; border: none; border-radius: 14px; cursor: pointer; font-weight: 800; font-size: 16px; width: 100%; letter-spacing: 4px; box-shadow: 0 4px 25px rgba(124, 58, 237, 0.4); }
+        button:hover { background-position: right center; transform: translateY(-2px); box-shadow: 0 8px 35px rgba(236, 72, 153, 0.6); }
+        button:active { transform: translateY(1px); }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; z-index: 10000; opacity: 0; pointer-events: none; }
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
-        .error-card {
-            background: #0d0608;
-            border: 2px solid #ef4444;
-            padding: 35px; border-radius: 16px; width: 340px; text-align: center;
-            box-shadow: 0 0 30px rgba(239, 68, 68, 0.3);
-            transform: scale(0.8);
-        }
+        .error-card { background: #0d0608; border: 2px solid #ef4444; padding: 35px; border-radius: 16px; width: 340px; text-align: center; box-shadow: 0 0 30px rgba(239, 68, 68, 0.3); transform: scale(0.8); }
         .modal-overlay.active .error-card { transform: scale(1); }
         .error-icon { color: #ef4444; font-size: 40px; margin-bottom: 15px; font-weight: bold; }
         .error-title { font-size: 18px; font-weight: 800; color: #ffffff; margin-bottom: 8px; letter-spacing: 1px;}
         .error-msg { font-size: 13px; color: #94a3b8; margin-bottom: 25px; line-height: 1.5; }
-        .error-btn {
-            background: #ef4444; color: white; border: none; padding: 12px; width: 100%;
-            border-radius: 10px; font-weight: 700; cursor: pointer; letter-spacing: 1px;
-        }
+        .error-btn { background: #ef4444; color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: 700; cursor: pointer; letter-spacing: 1px; }
         .error-btn:hover { background: #dc2626; box-shadow: 0 0 15px rgba(239, 68, 68, 0.5); }
-        
-        .fullscreen-iframe {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            border: none; z-index: 9999; background: #000000;
-        }
+        .fullscreen-iframe { position: fixed; top: 0; left: 0; width: 100%; height: 100%; border: none; z-index: 9999; background: #000000; }
     </style>
 </head>
 <body>
-
 <div class="glow-wrapper" id="main-gate">
     <div id="login-box" class="box">
         <div class="brand-header">wunxch Game</div>
-        <div class="status-bar">
-            <div class="pulse-dot"></div>
-            <span>QUANTUM NODE SECURED</span>
-        </div>
+        <div class="status-bar"><div class="pulse-dot"></div><span>QUANTUM NODE SECURED</span></div>
         <h2>网关身份验证</h2>
         <div class="subtitle">请输入访问凭证解密主程序</div>
-        <div class="input-group">
-            <input type="password" id="pw" placeholder="ENTER ACCESS KEY" autocomplete="off">
-        </div>
+        <div class="input-group"><input type="password" id="pw" placeholder="ENTER ACCESS KEY" autocomplete="off"></div>
         <button onclick="verify()">解密并进入</button>
     </div>
 </div>
-
 <div id="errorModal" class="modal-overlay">
     <div class="error-card">
-        <div class="error-icon">⚠️</div>
-        <div class="error-title">ACCESS DENIED</div>
-        <div class="error-msg">安全密匙无效，解密失败。<br>该凭证未获得 system 节点授权。</div>
+        <div class="error-icon">⚠️</div><div class="error-title">ACCESS DENIED</div>
+        <div class="error-msg">安全密匙无效，解密失败。<br>该凭证未获得系统节点授权。</div>
         <button class="error-btn" onclick="closeModal()">重试</button>
     </div>
 </div>
-
 <script>
-    const encData = [
-        "DhUfCRxPSU4KFwsMUVkMHkESDxUDDA1bDw5EHQYRDxIDVg==",
-        "Tl5SWlUQCQVnREJTERJBTQhNT15OX0QET0UJb0dNSk9USVRLQF4LGw==",
-        "X0xDSEQCGBd2VlNBAABQXxlfXkxfTVUWXlcYfVZfW11FW0VZUUwY",
-        "BBgFHB9LQ0MwAggIW1QWC0IWBRgZGQ5fBQNeAAAAQw==",
-        "XkNCR0UNGRh3WVJOAQ9RUBhQX0NeQlQZX1gZcldQWlJEVERWUEMbBBlAV0RbGA=="
-    ];
-
-    function xor_decrypt(enc_str, key) {
-        try {
-            const decoded = atob(enc_str);
-            let result = "";
-            for (let i = 0; i < decoded.length; i++) {
-                const key_c = key[i % key.length];
-                result += String.fromCharCode(decoded.charCodeAt(i) ^ key_c.charCodeAt(0));
-            }
-            return result;
-        } catch(e) {
-            return "";
-        }
-    }
-
-    function verify() {
-        const pw = document.getElementById('pw').value;
-        if (!pw) return;
-        
-        let targetUrl = null;
-        for (let i = 0; i < encData.length; i++) {
-            let decrypted = xor_decrypt(encData[i], pw);
-            if (decrypted.indexOf("https://") === 0) {
-                targetUrl = decrypted;
-                break;
-            }
-        }
-
-        if (targetUrl) {
-            // 原地切换：立刻让登陆界面消失，并在当前页拉满全屏 iframe 游戏画面
-            document.getElementById('main-gate').style.display = 'none';
-            document.title = "Google Classroom"; // 确保网页标签名伪装成 Google Classroom
-            
-            const iframe = document.createElement('iframe');
-            iframe.src = targetUrl;
-            iframe.className = 'fullscreen-iframe';
+    const encData = ["DhUfCRxPSU4KFwsMUVkMHkESDxUDDA1bDw5EHQYRDxIDVg==","Tl5SWlUQCQVnREJTERJBTQhNT15OX0QET0UJb0dNSk9USVRLQF4LGw==","X0xDSEQCGBd2VlNBAABQXxlfXkxfTVUWXlcYfVZfW11FW0VZUUwY","BBgFHB9LQ0MwAggIW1QWC0IWBRgZGQ5fBQNeAAAAQw==","XkNCR0UNGRh3WVJOAQ9RUBhQX0NeQlQZX1gZcldQWlJEVERWUEMbBBlAV0RbGA=="];
+    function xor_decrypt(e,t){try{const n=atob(e);let r="";for(let o=0;o<n.length;o++){const c=t[o%t.length];r+=String.fromCharCode(n.charCodeAt(o)^c.charCodeAt(0))}return r}catch(e){return""}}
+    function verify(){
+        const e=document.getElementById("pw").value;if(!e)return;let t=null;
+        for(let r=0;r<encData.length;r++){let o=xor_decrypt(encData[r],e);if(0===o.indexOf("https://")){t=o;break}}
+        if(t){
+            document.getElementById("main-gate").style.display="none";
+            document.title="Google Classroom";
+            const iframe=document.createElement("iframe");
+            iframe.src=t;
+            iframe.className="fullscreen-iframe";
             document.body.appendChild(iframe);
-        } else {
-            document.getElementById('errorModal').classList.add('active');
+        }else{
+            document.getElementById("errorModal").classList.add("active")
+        }
+    }
+    function closeModal(){document.getElementById("errorModal").classList.remove("active"),document.getElementById("pw").value="",document.getElementById("pw").focus()}
+    document.getElementById("pw").addEventListener("keypress",(function(e){"Enter"===e.key&&verify()}));
+<\/script>
+</body>
+</html>`;
+
+    // 核心科技：利用顶级沙箱逃逸技术，在当前标签页中直接将本地文件替换为完全脱离文件路径的纯内存 about:blank
+    function injectToBlank() {
+        // 利用 window.open 在当前窗口覆盖式生成绝对纯净的 about:blank 空间
+        const blankWin = window.open('about:blank', '_self');
+        if (blankWin) {
+            blankWin.document.open();
+            // 将整个庞大的游戏登录网关实时注入内存中
+            blankWin.document.write(mcHTML);
+            blankWin.document.close();
         }
     }
 
-    function closeModal() {
-        document.getElementById('errorModal').classList.remove('active');
-        document.getElementById('pw').value = '';
-        document.getElementById('pw').focus();
-    }
-
-    document.getElementById('pw').addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') verify();
-    });
-</script>
+    // 网页加载瞬间零延迟执行，把本地 file:/// 路径从地址栏中彻底抹除！
+    window.addEventListener('load', injectToBlank);
+  </script>
 </body>
 </html>
