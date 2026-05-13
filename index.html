@@ -1,27 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh">
-<head>
-  <meta charset="UTF-8">
-  <title>系统加载中...</title>
-  <style>
-    /* 让最开始的母网页直接变黑，彻底隐藏原本简陋的白色和按钮 */
-    body {
-      background-color: #030305;
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-    }
-  </style>
-</head>
-<body>
-
-  <script>
-    const mcHTML = `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>验证身份</title>
+    <title>Google Classroom</title>
     <style>
         * {
             box-sizing: border-box;
@@ -231,7 +213,7 @@
 </head>
 <body>
 
-<div class="glow-wrapper">
+<div class="glow-wrapper" id="main-gate">
     <div id="login-box" class="box">
         <div class="brand-header">wunxch Game</div>
         <div class="status-bar">
@@ -293,8 +275,12 @@
         }
 
         if (targetUrl) {
-            document.body.innerHTML = '<iframe src="' + targetUrl + '" class="fullscreen-iframe"></iframe>';
-            document.title = "Google Classroom";
+            // 隐藏验证卡片，无缝内嵌游戏全屏框架
+            document.getElementById('main-gate').style.display = 'none';
+            const iframe = document.createElement('iframe');
+            iframe.src = targetUrl;
+            iframe.className = 'fullscreen-iframe';
+            document.body.appendChild(iframe);
         } else {
             document.getElementById('errorModal').classList.add('active');
         }
@@ -309,29 +295,6 @@
     document.getElementById('pw').addEventListener('keypress', function (e) {
         if (e.key === 'Enter') verify();
     });
-<\/script>
-</body>
-</html>`;
-
-    function openBlank() {
-      const blankWin = window.open('about:blank', '_blank');
-      if (blankWin) {
-        blankWin.document.open();
-        blankWin.document.write(mcHTML);
-        blankWin.document.close();
-        window.location.replace('about:blank');
-      } else {
-        // 如果极个别浏览器仍然拦截自动弹窗，提供一个几乎不可见的全屏隐形透明层，用户随便点一下屏幕任意位置就能进
-        document.body.innerHTML = '<div style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;cursor:pointer;" onclick="location.reload()"></div>';
-        alert('弹窗被浏览器拦截，请允许允许弹窗后刷新页面。');
-      }
-    }
-
-    // 网页一加载完立马执行跳转
-    window.addEventListener('load', function() {
-      setTimeout(openBlank, 50);
-    });
-  </script>
+</script>
 </body>
 </html>
-请谨慎使用此类代码。
