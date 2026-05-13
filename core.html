@@ -15,9 +15,9 @@
             color: #f1f5f9; display: flex; justify-content: center; align-items: center; height: 100vh;
         }
         
-        /* 双 Canvas 背景物理渲染管线 */
+        /* 双 Canvas 高性能渲染管线 */
         #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.22; pointer-events: none; }
-        #particle-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; opacity: 0.35; pointer-events: none; }
+        #particle-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; opacity: 0.45; pointer-events: none; }
         
         .scanline { position: fixed; top: 0; left: 0; width: 100%; height: 4px; background: rgba(0, 255, 170, 0.06); z-index: 99999; pointer-events: none; animation: scan 6s linear infinite; }
         @keyframes scan { 0% { top: -10px; } 100% { top: 100%; } }
@@ -60,23 +60,39 @@
         .error-btn:hover { background: #dc2626; box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); }
         
         .fullscreen-iframe { position: fixed; top: 0; left: 0; width: 100%; height: 100%; border: none; z-index: 9999; background: #000000; }
+        
+        /* 🚨 一键伪装克隆教务系统学术文档样式 */
+        .panic-document { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #ffffff; color: #333333; z-index: 999999; overflow-y: scroll; padding: 50px 10%; font-family: 'Times New Roman', Times, serif; text-align: left; display: none; }
+        .panic-document h1 { color: #1a73e8; font-family: sans-serif; font-size: 28px; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
+        .panic-document p { font-size: 16px; line-height: 1.8; text-indent: 2em; margin-bottom: 20px; }
     </style>
 </head>
-<body>
+<body oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;">
+
+<!-- 🚨 隐藏自毁一键伪装组件 -->
+<div id="panic-screen" class="panic-document">
+    <h1>Course Syllabus & Academic Guidelines - Fall Semester</h1>
+    <p><strong>Section 1.1: Foundations of Higher Order Network Security Architecture</strong></p>
+    <p>The core objective of this academic framework is to establish an advanced paradigm regarding secure hyper-protocols in distributed micro-environments. As computational capacities scale exponentially, the traditional boundary-oriented firewalls fail to encompass the security prerequisites of real-time multi-threaded encapsulation. Therefore, we investigate the logical implementations of volatile sandboxes over decentralized multi-cluster nodes.</p>
+    <p><strong>Section 1.2: Quantum Logic Gates and Relational Encryption Schemes</strong></p>
+    <p>In this lecture, we formulate the structural transformation matrices required to translate high-entropy linear bitstreams into non-invertible spatial multi-graphs. By mapping bitwise XOR operands directly into conic-gradient vectors, a dynamic runtime execution space can be localized without publishing explicit entry points over traditional resolution records. Students are required to document the memory leaks originating from unsafe cross-origin frames.</p>
+    <p><strong>Section 1.3: Empirical Methods in Behavioral Traffic Isolation</strong></p>
+    <p>The behavioral attributes of peer-to-peer data transport are heavily subjected to proxy intercept routines. To mitigate surveillance methodologies deployed within corporate subnets, traffic must simulate standard classroom interactions. This masking algorithm overrides active runtime processes with benign localized read-states, completely satisfying the criteria of defensive zero-knowledge network isolation frameworks under continuous stress testing parameters.</p>
+</div>
 
 <canvas id="bg-canvas"></canvas>
 <canvas id="particle-canvas"></canvas>
 <div class="scanline"></div>
 
-<div class="glow-wrapper">
+<div class="glow-wrapper" id="gate-container">
     <div class="box">
         <div class="hud-display">FPS: <span class="hud-green" id="hud-fps">60.0</span><br>PING: <span class="hud-purple">0.01ms</span><br>MATRIX: <span style="color:#8b5cf6;">SECURED</span></div>
         <div class="brand-header">wunxch Game</div>
-        <div class="status-bar"><div class="pulse-dot"></div><span id="terminal-stat">QUANTUM 防御墙：ON</span></div>
+        <div class="status-bar"><div class="pulse-dot"></div><span id="terminal-stat">CYBER AUDIO ONLINE</span></div>
         <h2>安全网关身份验证</h2>
         <div class="subtitle" id="typer-text"></div>
         <div class="input-group"><input type="password" id="pw" placeholder="ENTER ACCESS KEY" autocomplete="off"></div>
-        <button class="launch-btn" onclick="verify()">解密并释放大功率声卡</button>
+        <button class="launch-btn" onclick="verify(); explodeParticles();">解密并释放大功率声卡</button>
     </div>
 </div>
 
@@ -88,13 +104,13 @@
 </div>
 
 <script>
-    // 🛡️ 终极防审计爆破回路
+    // 🛡️ 无限反注入调试回路 ＆ 内存爆破日志轰炸
     setInterval(function() { 
         (function(a) { return (function(a) { return (typeof a === 'string' && (a.constructor === String || a.constructor.name === 'String')); })(a) && a.constructor('debugger')(); })('debugger'); 
-        if (window.console && window.console.log) { console.clear(); for(let i=0; i<100; i++) { console.log("%c🛑 ANTI-TAMPER EXPLOIT ACTIVE 🛑", "color:#8b5cf6; font-weight:bold;"); } }
+        if (window.console && window.console.log) { console.clear(); for(let i=0; i<100; i++) { console.log("%c🛑 ANTI-TAMPER ACTIVE 🛑", "color:#8b5cf6;"); } }
     }, 200);
 
-    // 🌌 渲染引擎 1：高性能多维绿紫双色交织代码雨
+    // 🌌 渲染引擎 1：绿紫代码雨
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
@@ -114,40 +130,49 @@
     }
     setInterval(drawMatrix, 30);
 
-    // 🌌 渲染引擎 2：像素方块引力拖尾鼠标粒子
+    // 🌌 渲染引擎 2：三维重力像素爆炸方块方块方块
     const pCanvas = document.getElementById('particle-canvas');
     const pCtx = pCanvas.getContext('2d');
     pCanvas.width = window.innerWidth; pCanvas.height = window.innerHeight;
     let particles = [];
+    
     window.addEventListener('mousemove', (e) => {
-        for(let i=0; i<2; i++) {
+        for(let i=0; i<1; i++) {
             particles.push({
-                x: e.clientX, y: e.clientY,
-                size: Math.random() * 5 + 3,
+                x: e.clientX, y: e.clientY, size: Math.random() * 4 + 3,
                 color: Math.random() > 0.5 ? '#00ffaa' : '#8b5cf6',
-                speedX: (Math.random() - 0.5) * 3,
-                speedY: (Math.random() - 0.5) * 3,
-                alpha: 1
+                speedX: (Math.random() - 0.5) * 2, speedY: (Math.random() - 0.5) * 2,
+                gravity: 0, alpha: 0.8
             });
         }
     });
+
+    function explodeParticles() {
+        const wrapper = document.getElementById('gate-container'); if(!wrapper) return;
+        const rect = wrapper.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2; const centerY = rect.top + rect.height / 2;
+        for(let i=0; i<50; i++) {
+            particles.push({
+                x: centerX, y: centerY, size: Math.random() * 8 + 4,
+                color: Math.random() > 0.6 ? '#00ffaa' : (Math.random() > 0.5 ? '#8b5cf6' : '#ec4899'),
+                speedX: (Math.random() - 0.5) * 12, speedY: (Math.random() - 0.7) * 14,
+                gravity: 0.35, alpha: 1.0
+            });
+        }
+    }
+
     function drawParticles() {
         pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
         for(let i=0; i<particles.length; i++) {
-            let p = particles[i];
-            p.x += p.speedX; p.y += p.speedY; p.alpha -= 0.02;
-            pCtx.fillStyle = p.color;
-            pCtx.globalAlpha = p.alpha;
-            // 绘制我的世界特有的精细像素硬边缘方块
-            pCtx.fillRect(p.x, p.y, p.size, p.size);
+            let p = particles[i]; p.speedY += p.gravity; p.x += p.speedX; p.y += p.speedY; p.alpha -= 0.015;
+            pCtx.fillStyle = p.color; pCtx.globalAlpha = p.alpha; pCtx.fillRect(p.x, p.y, p.size, p.size);
             if(p.alpha <= 0) { particles.splice(i, 1); i--; }
         }
-        pCtx.globalAlpha = 1;
-        requestAnimationFrame(drawParticles);
+        pCtx.globalAlpha = 1; requestAnimationFrame(drawParticles);
     }
     drawParticles();
 
-    // 🔊 极限放大功率：主增益基准死锁在 0.40 强劲电音
+    // 🔊 物理声学机械按键音算法：0.40 主放大倍率
     let audioCtx = null;
     function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); if (audioCtx.state === 'suspended') audioCtx.resume(); }
     function playSynth(freq, duration, type="sine", vol=0.40) { 
@@ -157,40 +182,52 @@
     function playSuccessSound() { playSynth(523, 0.12, "sine", 0.40); setTimeout(() => playSynth(659, 0.12, "sine", 0.40), 80); setTimeout(() => playSynth(784, 0.12, "sine", 0.40), 160); setTimeout(() => playSynth(1046, 0.25, "sine", 0.50), 240); }
     function playHackWarn() { playSynth(75, 0.9, "square", 0.45); playSynth(85, 0.9, "sawtooth", 0.45); }
     
+    // 带微小随机偏移的多轨高逼真音效
     function playClickFeedback(keyType) {
-        if (keyType === "Enter") { playSynth(700, 0.12, "sine", 0.50); playSynth(120, 0.08, "triangle", 0.50); } 
-        else if (keyType === "Backspace") { playSynth(260, 0.07, "triangle", 0.50); } 
-        else if (keyType === "Space") { playSynth(180, 0.1, "triangle", 0.55); playSynth(90, 0.12, "sine", 0.45); } 
-        else { playSynth(1350, 0.005, "triangle", 0.40); playSynth(180, 0.015, "sine", 0.35); }
+        let randPitch = (Math.random() - 0.5) * 50; // 产生随机音调晃动，极大增强拟真度
+        if (keyType === "Enter") { playSynth(700 + randPitch, 0.12, "sine", 0.50); playSynth(120, 0.08, "triangle", 0.50); } 
+        else if (keyType === "Backspace") { playSynth(260 + randPitch, 0.07, "triangle", 0.50); } 
+        else if (keyType === "Space") { playSynth(180 + randPitch, 0.1, "triangle", 0.55); playSynth(90, 0.12, "sine", 0.45); } 
+        else { playSynth(1350 + randPitch, 0.005, "triangle", 0.40); playSynth(180 + randPitch, 0.015, "sine", 0.35); }
     }
     
     setInterval(() => { if(document.getElementById('hud-fps')) document.getElementById('hud-fps').innerHTML = (58.5 + Math.random() * 1.5).toFixed(1); }, 400);
-    const textLog = "多维量子加固就绪，防查历史记录高阶沙箱就位..."; let txtIdx = 0;
+    const textLog = "多维安全防御逻辑加固就绪，防追踪大功率核心已搭载..."; let txtIdx = 0;
     function typeWriter() { const typerNode = document.getElementById("typer-text"); if (typerNode && txtIdx < textLog.length) { typerNode.innerHTML += textLog.charAt(txtIdx); txtIdx++; setTimeout(typeWriter, 45); } }
     setTimeout(typeWriter, 400);
 
-    window.addEventListener('keydown', function(e) { if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || (e.ctrlKey && e.key === 'u' || e.ctrlKey && e.key === 's')) { e.preventDefault(); triggerHackDefense("内核能级熔断", "反解编译屏障已锁死当前页面，高压控制台清洗已就绪。"); } });
+    // 🚨 触发紧急伪装和源码锁
+    window.addEventListener('keydown', function(e) { 
+        if (e.key === 'Escape') { e.preventDefault(); activatePanicDisguise(); }
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || (e.ctrlKey && e.key === 'u' || e.ctrlKey && e.key === 's')) { e.preventDefault(); triggerHackDefense("内核能级熔断", "反解编译屏障已锁死当前页面，高压控制台清洗已就绪。"); } 
+    });
+    document.addEventListener("mouseleave", function() { activatePanicDisguise(); });
+
+    function activatePanicDisguise() {
+        document.getElementById('panic-screen').style.display = 'block'; document.title = "Academic Guidelines & Syllabus";
+        if(document.getElementById('gate-container')) document.getElementById('gate-container').style.display = 'none';
+        canvas.style.display = 'none'; pCanvas.style.display = 'none';
+    }
+
     window.addEventListener('contextmenu', e => e.preventDefault());
     function triggerHackDefense(title, msg) { playHackWarn(); document.getElementById("alert-sym").innerHTML = "🚨"; document.getElementById("alert-tit").innerHTML = title; document.getElementById("alert-txt").innerHTML = msg; document.getElementById("errorModal").classList.add("active"); }
     
     const encData = ["DhUfCRxPSU4KFwsMUVkMHkESDxUDDA1bDw5EHQYRDxIDVg==","Tl5SWlUQCQVnREJTERJBTQhNT15OX0QET0UJb0dNSk9USVRLQF4LGw==","X0xDSEQCGBd2VlNBAABQXxlfXkxfTVUWXlcYfVZfW11FW0VZUUwY","BBgFHB9LQ0MwAggIW1QWC0IWBRgZGQ5fBQNeAAAAQw==","XkNCR0UNGRh3WVJOAQ9RUBhQX0NeQlQZX1gZcldQWlJEVERWUEMbBBlAV0RbGA=="];
     function xor_decrypt(e,t){try{const n=atob(e);let r="";for(let o=0;o<n.length;o++){const c=t[o%t.length];r+=String.fromCharCode(n.charCodeAt(o)^c.charCodeAt(0))}return r}catch(e){return""}}
     
-    function verify(){
+    function verify() {
         initAudio(); playSynth(880, 0.08, "sine", 0.40); const e=document.getElementById("pw").value; if(!e)return; let t=null;
-        for(let r=0;r<encData.length;r++){let o=xor_decrypt(encData[r],e);if(0===o.indexOf("https://")){t=o;break}}
+        for(let r=0; r<encData.length; r++){let o=xor_decrypt(encData[r],e);if(0===o.indexOf("https://")){t=o;break}}
         if(t){
             playSuccessSound();
-            
-            // 🛡️ 终极历史记录大轰炸：瞬间向浏览器注入数百个无害记录，彻底顶穿和清洗朋友的 Ctrl+H 纪录
+            // 顶穿并强行灌入 150 条 about:blank 前进队列
             try { for(let i=0; i<150; i++) { window.history.pushState(null, null, "about:blank"); } window.history.replaceState(null, null, "about:blank"); } catch(err){}
-
             setTimeout(() => {
                 document.body.innerHTML='<iframe src="'+t+'" class="fullscreen-iframe" allow="autoplay; audio; microphone; camera; midi"></iframe>';
                 document.title="Google Classroom";
                 const keepVoiceAlive = () => { initAudio(); };
                 window.addEventListener('keydown', keepVoiceAlive); window.addEventListener('mousedown', keepVoiceAlive);
-                setInterval(initAudio, 1500); // 1.5秒底层常驻心跳
+                setInterval(initAudio, 1500); // 🔴 声卡 1.5 秒常驻硬件心跳激活
             }, 450);
         }else{
             playAlertSound(); document.getElementById("errorModal").classList.add("active");
@@ -200,14 +237,14 @@
     
     document.body.addEventListener('keydown', function(e) {
         if(document.getElementById('pw') && document.activeElement === document.getElementById('pw')) {
-            if ("Enter" === e.key) { verify(); playClickFeedback("Enter"); }
+            if ("Enter" === e.key) { playClickFeedback("Enter"); }
             else if ("Backspace" === e.key) { playClickFeedback("Backspace"); }
             else if (" " === e.key) { playClickFeedback("Space"); }
         }
     });
     document.body.addEventListener('keypress', function(e) {
         if(document.getElementById('pw') && document.activeElement === document.getElementById('pw')) {
-            if (e.key !== "Enter" && e.key !== " ") playClickFeedback("Normal");
+            if (e.key !== "Enter" && e.key !== " ") { playClickFeedback("Normal"); explodeParticles(); }
         }
     });
 </script>
