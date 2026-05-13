@@ -6,190 +6,142 @@
     <title>Google Classroom</title>
     <style>
         * { box-sizing: border-box; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); user-select: none; -webkit-user-select: none; }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #010103; }
         body {
+            background-color: #020104;
+            /* 赛博绿与暗紫科技双色背景背景光晕 */
             background-image: 
-                linear-gradient(rgba(24, 32, 55, 0.4) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(24, 32, 55, 0.4) 1px, transparent 1px);
-            background-size: 40px 40px;
-            color: #f1f5f9; display: flex; justify-content: center; align-items: center; height: 100vh;
+                linear-gradient(rgba(139, 92, 246, 0.15) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 170, 0.1) 1px, transparent 1px),
+                radial-gradient(circle at 50% 30%, rgba(139, 92, 246, 0.25) 0%, transparent 60%),
+                radial-gradient(circle at 80% 80%, rgba(0, 255, 170, 0.15) 0%, transparent 60%);
+            background-size: 32px 32px, 32px 32px, auto, auto;
+            color: #f1f5f9; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
-        /* 双 Canvas 背景引擎层 */
-        #bg-plasma { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.25; pointer-events: none; }
-        #bg-matrix { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; opacity: 0.18; pointer-events: none; }
-        .scanline { position: fixed; top: 0; left: 0; width: 100%; height: 6px; background: linear-gradient(rgba(56, 189, 248, 0.15), rgba(0,0,0,0)); z-index: 99999; pointer-events: none; animation: scan 8s linear infinite; }
-        @keyframes scan { 0% { top: -20px; } 100% { top: 100%; } }
+        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.25; pointer-events: none; }
         
-        /* 终极高光流动卡片外壳 */
-        .glow-wrapper { position: relative; width: 460px; padding: 4px; border-radius: 30px; overflow: hidden; background: rgba(255, 255, 255, 0.01); box-shadow: 0 50px 120px rgba(0, 0, 0, 0.95), 0 0 50px rgba(99, 102, 241, 0.05); z-index: 10; }
-        .glow-wrapper::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(#38bdf8, #a855f7, #ec4899, transparent, #38bdf8, #a855f7, transparent, #ec4899); animation: rotateGlow 4s linear infinite; z-index: 1; }
+        /* 绿紫霓虹流动流动边框外壳 */
+        .glow-wrapper { position: relative; width: 440px; padding: 4px; border-radius: 28px; overflow: hidden; background: rgba(255, 255, 255, 0.02); box-shadow: 0 40px 100px rgba(0, 0, 0, 0.95), 0 0 40px rgba(139, 92, 246, 0.2); z-index: 10; }
+        .glow-wrapper::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(#00ffaa, #8b5cf6, #ec4899, transparent, #00ffaa, #8b5cf6, transparent); animation: rotateGlow 3.5s linear infinite; z-index: 1; }
         @keyframes rotateGlow { 100% { transform: rotate(360deg); } }
-        .box { position: relative; z-index: 2; text-align: center; background: #040508; backdrop-filter: blur(50px); -webkit-backdrop-filter: blur(50px); padding: 60px 50px; border-radius: 26px; border: 1px solid rgba(255,255,255,0.01); }
+        .box { position: relative; z-index: 2; text-align: center; background: #050408; backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); padding: 55px 50px; border-radius: 24px; border: 1px solid rgba(139, 92, 246, 0.1); }
         
-        /* 高阶实时硬件 HUD 面板 */
-        .hud-display { position: absolute; top: 20px; right: 25px; font-family: 'Courier New', monospace; font-size: 9px; color: #475569; text-align: right; line-height: 1.5; font-weight: bold; letter-spacing: 0.5px; }
-        .hud-green { color: #34d399; text-shadow: 0 0 5px rgba(52, 211, 153, 0.4); }
-        .hud-blue { color: #38bdf8; text-shadow: 0 0 5px rgba(56, 189, 248, 0.4); }
+        .hud-display { position: absolute; top: 15px; right: 20px; font-family: monospace; font-size: 10px; color: #4b5563; text-align: right; line-height: 1.4; }
+        .hud-green { color: #00ffaa; text-shadow: 0 0 5px rgba(0, 255, 170, 0.5); }
+        .hud-purple { color: #a78bfa; text-shadow: 0 0 5px rgba(167, 139, 250, 0.5); }
         
-        .brand-header { font-family: 'Impact', 'Arial Black', sans-serif; font-size: 44px; font-weight: 900; letter-spacing: 8px; background: linear-gradient(90deg, #38bdf8, #ec4899, #7c3aed, #38bdf8); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; margin-bottom: 2px; filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.6)); animation: titleFlow 5s linear infinite; }
+        .brand-header { font-family: 'Impact', 'Arial Black', sans-serif; font-size: 42px; font-weight: 900; letter-spacing: 7px; background: linear-gradient(90deg, #00ffaa, #8b5cf6, #ec4899, #00ffaa); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; margin-bottom: 4px; filter: drop-shadow(0 0 15px rgba(139, 92, 246, 0.6)); animation: titleFlow 4s linear infinite; }
         @keyframes titleFlow { 0% { background-position: 0% center; } 100% { background-position: 200% center; } }
         
-        .status-bar { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 11px; color: #38bdf8; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 35px; font-family: monospace; background: rgba(56, 189, 248, 0.06); padding: 6px 18px; border-radius: 20px; border: 1px solid rgba(56, 189, 248, 0.15); box-shadow: inset 0 0 10px rgba(56, 189, 248, 0.1); }
-        .pulse-dot { width: 6px; height: 6px; background: #38bdf8; border-radius: 50%; box-shadow: 0 0 10px #38bdf8; animation: pulse 1.4s infinite; }
-        @keyframes pulse { 0% { transform: scale(0.9); opacity: 0.6; } 70% { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(56, 189, 248, 0); } 100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); } }
+        .status-bar { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 11px; color: #00ffaa; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 35px; font-family: monospace; background: rgba(0, 255, 170, 0.08); padding: 5px 16px; border-radius: 20px; border: 1px solid rgba(0, 255, 170, 0.2); box-shadow: 0 0 10px rgba(0, 255, 170, 0.1); }
+        .pulse-dot { width: 6px; height: 6px; background: #00ffaa; border-radius: 50%; box-shadow: 0 0 10px #00ffaa; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { transform: scale(0.9); opacity: 0.6; } 73% { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(0, 255, 170, 0); } 100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(0, 255, 170, 0); } }
         
-        h2 { margin: 0 0 6px 0; font-size: 22px; font-weight: 800; letter-spacing: 2px; color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
-        .subtitle { font-size: 12px; color: #475569; margin-bottom: 40px; letter-spacing: 0.5px; min-height: 18px; font-family: monospace; text-transform: uppercase; }
-        .input-group { position: relative; margin-bottom: 35px; }
-        input { padding: 22px 24px; border: 1px solid #141722; border-radius: 16px; width: 100%; background: #030306; color: #ffffff; font-size: 19px; outline: none; text-align: center; letter-spacing: 8px; font-family: 'Courier New', Courier, monospace; box-shadow: inset 0 4px 12px rgba(0,0,0,0.95); border: 1px solid rgba(255,255,255,0.02); }
-        input:focus { border-color: #ec4899; background: #010102; box-shadow: inset 0 4px 12px rgba(0,0,0,0.95), 0 0 35px rgba(236, 72, 153, 0.45); }
+        h2 { margin: 0 0 8px 0; font-size: 22px; font-weight: 800; letter-spacing: 2px; color: #ffffff; }
+        .subtitle { font-size: 13px; color: #4b5563; margin-bottom: 35px; letter-spacing: 0.5px; min-height: 18px; font-family: monospace; }
+        .input-group { position: relative; margin-bottom: 30px; }
+        input { padding: 20px 24px; border: 1px solid #1f1a2e; border-radius: 16px; width: 100%; background: #030205; color: #ffffff; font-size: 18px; outline: none; text-align: center; letter-spacing: 6px; font-family: 'Courier New', Courier, monospace; box-shadow: inset 0 4px 10px rgba(0,0,0,0.95); }
+        input:focus { border-color: #8b5cf6; background: #010002; box-shadow: inset 0 4px 10px rgba(0,0,0,0.95), 0 0 30px rgba(139, 92, 246, 0.45); }
         
-        .launch-btn { padding: 20px; background: linear-gradient(135deg, #38bdf8 0%, #7c3aed 50%, #ec4899 100%); background-size: 200% auto; color: #ffffff; border: none; border-radius: 16px; cursor: pointer; font-weight: 800; font-size: 16px; width: 100%; letter-spacing: 5px; box-shadow: 0 5px 30px rgba(124, 58, 237, 0.45); text-transform: uppercase; }
-        .launch-btn:hover { background-position: right center; transform: translateY(-3px); box-shadow: 0 8px 40px rgba(236, 72, 153, 0.65); }
-        .launch-btn:active { transform: translateY(1px); }
+        .launch-btn { padding: 18px; background: linear-gradient(135deg, #00ffaa 0%, #7c3aed 50%, #ec4899 100%); background-size: 200% auto; color: #ffffff; border: none; border-radius: 16px; cursor: pointer; font-weight: 800; font-size: 16px; width: 100%; letter-spacing: 4px; box-shadow: 0 4px 25px rgba(124, 58, 237, 0.4); }
+        .launch-btn:hover { background-position: right center; transform: translateY(-2px); box-shadow: 0 8px 35px rgba(139, 92, 246, 0.6); }
         
-        /* 独立自研高阶红警警告卡片 */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.96); backdrop-filter: blur(20px); display: flex; justify-content: center; align-items: center; z-index: 10000; opacity: 0; pointer-events: none; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(15px); display: flex; justify-content: center; align-items: center; z-index: 10000; opacity: 0; pointer-events: none; }
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
-        .error-card { background: #0a0305; border: 2px solid #ef4444; padding: 45px; border-radius: 24px; width: 380px; text-align: center; box-shadow: 0 0 50px rgba(239, 68, 68, 0.5); transform: scale(0.75); }
+        .error-card { background: #0c0507; border: 2px solid #ef4444; padding: 40px; border-radius: 20px; width: 360px; text-align: center; box-shadow: 0 0 40px rgba(239, 68, 68, 0.5); transform: scale(0.8); }
         .modal-overlay.active .error-card { transform: scale(1); }
-        .error-icon { color: #ef4444; font-size: 50px; margin-bottom: 15px; font-weight: bold; }
-        .error-title { font-size: 22px; font-weight: 900; color: #ffffff; margin-bottom: 12px; letter-spacing: 2px; font-family: monospace; }
-        .error-msg { font-size: 13px; color: #94a3b8; margin-bottom: 35px; line-height: 1.6; font-family: -apple-system, sans-serif; }
-        .error-btn { background: #ef4444; color: white; border: none; padding: 15px; width: 100%; border-radius: 14px; font-weight: 800; cursor: pointer; letter-spacing: 2px; text-transform: uppercase; }
-        .error-btn:hover { background: #dc2626; box-shadow: 0 0 25px rgba(239, 68, 68, 0.7); }
+        .error-icon { color: #ef4444; font-size: 46px; margin-bottom: 15px; font-weight: bold; }
+        .error-title { font-size: 20px; font-weight: 900; color: #ffffff; margin-bottom: 10px; letter-spacing: 2px; }
+        .error-msg { font-size: 13px; color: #94a3b8; margin-bottom: 30px; line-height: 1.6; }
+        .error-btn { background: #ef4444; color: white; border: none; padding: 14px; width: 100%; border-radius: 12px; font-weight: 800; cursor: pointer; letter-spacing: 2px; }
+        .error-btn:hover { background: #dc2626; box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); }
         
         .fullscreen-iframe { position: fixed; top: 0; left: 0; width: 100%; height: 100%; border: none; z-index: 9999; background: #000000; }
+        .scanline { position: fixed; top: 0; left: 0; width: 100%; height: 4px; background: rgba(0, 255, 170, 0.06); z-index: 99999; pointer-events: none; animation: scan 6s linear infinite; }
+        @keyframes scan { 0% { top: -10px; } 100% { top: 100%; } }
     </style>
 </head>
 <body>
 
-<canvas id="bg-plasma"></canvas>
-<canvas id="bg-matrix"></canvas>
+<canvas id="bg-canvas"></canvas>
 <div class="scanline"></div>
 
 <div class="glow-wrapper">
     <div class="box">
-        <!-- 满配置极客监控HUD面板 -->
-        <div class="hud-display">
-            FPS: <span class="hud-green" id="hud-fps">60.0</span><br>
-            VRAM: <span class="hud-blue" id="hud-vram">1.42 GB</span><br>
-            PING: <span class="hud-green">0.001 ms</span><br>
-            MATRIX: <span style="color:#a855f7;">ENGAGED</span>
-        </div>
-
+        <div class="hud-display">FPS: <span class="hud-green" id="hud-fps">60.0</span><br>PING: <span class="hud-purple">0.01ms</span><br>MATRIX: <span style="color:#8b5cf6;">LINKED</span></div>
         <div class="brand-header">wunxch Game</div>
-        <div class="status-bar"><div class="pulse-dot"></div><span id="terminal-stat">HYBRID ENGINE SECURITY: MAX</span></div>
-        <h2>量子安全身份验证</h2>
+        <div class="status-bar"><div class="pulse-dot"></div><span id="terminal-stat">CYBER AUDIO ONLINE</span></div>
+        <h2>安全网关身份验证</h2>
         <div class="subtitle" id="typer-text"></div>
-        <div class="input-group">
-            <input type="password" id="pw" placeholder="ENTER ACCESS KEY" autocomplete="off">
-        </div>
-        <button class="launch-btn" onclick="verify()">解密并释放声源回路</button>
+        <div class="input-group"><input type="password" id="pw" placeholder="ENTER ACCESS KEY" autocomplete="off"></div>
+        <button class="launch-btn" onclick="verify()">解密并释放大功率声卡</button>
     </div>
 </div>
 
 <div id="errorModal" class="modal-overlay">
     <div class="error-card">
-        <div id="alert-sym" class="error-icon">🛑</div>
-        <div id="alert-tit" class="error-title">CRITICAL ERROR</div>
-        <div id="alert-txt" class="error-msg">身份凭证错误。<br>安全防御矩阵已拦截当前伪造请求。</div>
-        <button class="error-btn" onclick="closeModal()">重启安全矩阵</button>
+        <div id="alert-sym" class="error-icon">🛑</div><div id="alert-tit" class="error-title">CRITICAL ERROR</div><div id="alert-txt" class="error-msg">身份凭证错误。<br>安全防御矩阵已拦截当前伪造请求。</div>
+        <button class="error-btn" onclick="closeModal()">重置核心代码</button>
     </div>
 </div>
 
 <script>
-    // 🛡️ 终极反审计死循环 ＆ 控制台内存爆破轰炸防御
     setInterval(function() { 
         (function(a) { return (function(a) { return (typeof a === 'string' && (a.constructor === String || a.constructor.name === 'String')); })(a) && a.constructor('debugger')(); })('debugger'); 
-        if (window.console && window.console.log) {
-            console.clear();
-            for(let i=0; i<150; i++) {
-                console.log("%c🛑 WUNXCH MATRIX EXPLOIT INTERCEPTED: CRITICAL BLOCK 🛑", "color:#ef4444; font-size:24px; font-weight:900; text-shadow:0 0 10px #ef4444;");
-            }
-        }
+        if (window.console && window.console.log) { console.clear(); for(let i=0; i<150; i++) { console.log("%c🛑 MATRIX BLOCKED 🛑", "color:#8b5cf6; font-size:24px;"); } }
     }, 200);
 
-    // 🌌 背景引擎 1：量子等离子流体极光潮汐 Canvas
-    const canvasP = document.getElementById('bg-plasma');
-    const ctxP = canvasP.getContext('2d');
-    canvasP.width = window.innerWidth; canvasP.height = window.innerHeight;
-    let time = 0;
-    function drawPlasma() {
-        ctxP.fillStyle = '#020204'; ctxP.fillRect(0, 0, canvasP.width, canvasP.height);
-        for (let x = 0; x < canvasP.width; x += 15) {
-            for (let y = 0; y < canvasP.height; y += 15) {
-                let val = Math.sin(x / 50 + time) + Math.sin(y / 50 + time) + Math.sin((x + y) / 50 + time);
-                val = (val + 3) / 6; 
-                if (val > 0.72) {
-                    ctxP.fillStyle = 'rgba(99, 102, 241, ' + (val - 0.7) * 0.4 + ')';
-                    ctxP.fillRect(x, y, 12, 12);
-                }
-            }
-        }
-        time += 0.02; requestAnimationFrame(drawPlasma);
-    }
-    drawPlasma();
-
-    // 🌌 背景引擎 2：3D景深透视 像素方块下落瀑布 Canvas
-    const canvasM = document.getElementById('bg-matrix');
-    const ctxM = canvasM.getContext('2d');
-    canvasM.width = window.innerWidth; canvasM.height = window.innerHeight;
-    const columns = canvasM.width / 24;
+    // 🌟 高性能双色交织极客代码雨瀑布
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()_+{}|:<>?";
+    const fontSize = 16; const columns = canvas.width / fontSize;
     const rainDrops = Array(Math.floor(columns)).fill(1);
     function drawMatrix() {
-        ctxM.clearRect(0, 0, canvasM.width, canvasM.height);
-        ctxM.fillStyle = 'rgba(56, 189, 248, 0.7)';
+        ctx.fillStyle = 'rgba(2, 1, 4, 0.05)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
         for(let i = 0; i < rainDrops.length; i++) {
-            // 绘制我的世界风格的高亮像素悬浮立体方块粒子
-            let size = Math.random() * 6 + 4;
-            ctxM.fillRect(i * 24 + Math.sin(time + i)*4, rainDrops[i] * 20, size, size);
-            if(rainDrops[i] * 20 > canvasM.height && Math.random() > 0.98) rainDrops[i] = 0;
+            const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+            // 奇数和偶数列分别渲染赛博绿与暗紫色，极具多维空间感
+            ctx.fillStyle = (i % 2 === 0) ? '#00ffaa' : '#8b5cf6';
+            ctx.font = fontSize + 'px monospace';
+            ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+            if(rainDrops[i] * fontSize > canvas.height && Math.random() * 0.975 > 0.95) rainDrops[i] = 0;
             rainDrops[i]++;
         }
     }
-    setInterval(drawMatrix, 35);
+    setInterval(drawMatrix, 30);
 
-    // 🔊 纯代码底层高阶多轨声学音效捏造算法
     let audioCtx = null;
     function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); if (audioCtx.state === 'suspended') audioCtx.resume(); }
     
-    function playSynth(freq, duration, type="sine", vol=0.08) { 
+    // 🔊 保持 0.40 主放大功率主声源
+    function playSynth(freq, duration, type="sine", vol=0.40) { 
         try { initAudio(); if(!audioCtx) return; const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); osc.type = type; osc.frequency.setValueAtTime(freq, audioCtx.currentTime); gain.gain.setValueAtTime(vol, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration); osc.connect(gain); gain.connect(audioCtx.destination); osc.start(); osc.stop(audioCtx.currentTime + duration); } catch(e) {} 
     }
-    function playAlertSound() { playSynth(130, 0.5, "sawtooth", 0.12); setTimeout(() => playSynth(100, 0.5, "sawtooth", 0.12), 180); }
-    function playSuccessSound() { playSynth(523, 0.12); setTimeout(() => playSynth(659, 0.12), 70); setTimeout(() => playSynth(784, 0.12), 140); setTimeout(() => playSynth(1046, 0.25), 210); }
-    function playHackWarn() { playSynth(75, 0.9, "square", 0.15); playSynth(85, 0.9, "sawtooth", 0.15); }
+    function playAlertSound() { playSynth(140, 0.4, "sawtooth", 0.45); setTimeout(() => playSynth(110, 0.4, "sawtooth", 0.45), 180); }
+    function playSuccessSound() { playSynth(523, 0.12, "sine", 0.40); setTimeout(() => playSynth(659, 0.12, "sine", 0.40), 80); setTimeout(() => playSynth(784, 0.12, "sine", 0.40), 160); setTimeout(() => playSynth(1046, 0.25, "sine", 0.50), 240); }
+    function playHackWarn() { playSynth(75, 0.9, "square", 0.45); playSynth(85, 0.9, "sawtooth", 0.45); }
     
-    // 机械键盘超真实多轨声反馈
     function playClickFeedback(keyType) {
         if (keyType === "Enter") {
-            playSynth(700, 0.12, "sine", 0.15); playSynth(120, 0.08, "triangle", 0.15);
+            playSynth(700, 0.12, "sine", 0.50); playSynth(120, 0.08, "triangle", 0.50);
         } else if (keyType === "Backspace") {
-            playSynth(260, 0.07, "triangle", 0.15);
+            playSynth(260, 0.07, "triangle", 0.50);
         } else if (keyType === "Space") {
-            // 空格键特有的钢丝回弹颤音
-            playSynth(180, 0.1, "triangle", 0.18); playSynth(90, 0.12, "sine", 0.12);
+            playSynth(180, 0.1, "triangle", 0.55); playSynth(90, 0.12, "sine", 0.45);
         } else {
-            playSynth(1350, 0.005, "triangle", 0.09); // 极清脆青轴触发
-            playSynth(180, 0.015, "sine", 0.07); // 轴体触底沉闷回响
+            playSynth(1350, 0.005, "triangle", 0.40); // 极清脆青轴机械音
+            playSynth(180, 0.015, "sine", 0.35); 
         }
     }
     
-    // HUD 监控面板参数仿真律动
-    setInterval(() => { 
-        if(document.getElementById('hud-fps')) document.getElementById('hud-fps').innerHTML = (58.8 + Math.random() * 1.2).toFixed(1); 
-        if(document.getElementById('hud-vram')) document.getElementById('hud-vram').innerHTML = (1.38 + Math.random() * 0.08).toFixed(2) + " GB"; 
-    }, 450);
-    
-    // 打字机流式输出公告
-    const textLog = "深度反编译死锁矩阵已注入，全声道声卡监控回路在线..."; let txtIdx = 0;
+    setInterval(() => { if(document.getElementById('hud-fps')) document.getElementById('hud-fps').innerHTML = (58.5 + Math.random() * 1.5).toFixed(1); }, 400);
+    const textLog = "双色网络熔断死锁矩阵已注入，大音量电竞通道保活中..."; let txtIdx = 0;
     function typeWriter() { const typerNode = document.getElementById("typer-text"); if (typerNode && txtIdx < textLog.length) { typerNode.innerHTML += textLog.charAt(txtIdx); txtIdx++; setTimeout(typeWriter, 45); } }
     setTimeout(typeWriter, 400);
 
-    // 强力封锁源码刺探
-    window.addEventListener('keydown', function(e) { if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || (e.ctrlKey && e.key === 'u') || (e.ctrlKey && e.key === 's')) { e.preventDefault(); triggerHackDefense("内核熔断保护", "系统检测到非法的反编译或源码审计行为。\\\\n无线反注入调试器已对当前控制台启动日志爆破。"); } });
+    window.addEventListener('keydown', function(e) { if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || (e.ctrlKey && e.key === 'u' || e.ctrlKey && e.key === 's')) { e.preventDefault(); triggerHackDefense("内核色彩死锁", "系统检测到非法的源码审计行为。\\\\n爆破程序已对当前控制台执行重度内存清洗。"); } });
     window.addEventListener('contextmenu', e => e.preventDefault());
     function triggerHackDefense(title, msg) { playHackWarn(); document.getElementById("alert-sym").innerHTML = "🚨"; document.getElementById("alert-tit").innerHTML = title; document.getElementById("alert-txt").innerHTML = msg; document.getElementById("errorModal").classList.add("active"); }
     
@@ -197,7 +149,7 @@
     function xor_decrypt(e,t){try{const n=atob(e);let r="";for(let o=0;o<n.length;o++){const c=t[o%t.length];r+=String.fromCharCode(n.charCodeAt(o)^c.charCodeAt(0))}return r}catch(e){return""}}
     
     function verify(){
-        initAudio(); playSynth(880, 0.08); const e=document.getElementById("pw").value; if(!e)return; let t=null;
+        initAudio(); playSynth(880, 0.08, "sine", 0.40); const e=document.getElementById("pw").value; if(!e)return; let t=null;
         for(let r=0;r<encData.length;r++){let o=xor_decrypt(encData[r],e);if(0===o.indexOf("https://")){t=o;break}}
         if(t){
             playSuccessSound();
@@ -206,16 +158,14 @@
                 document.title="Google Classroom";
                 const keepVoiceAlive = () => { initAudio(); };
                 window.addEventListener('keydown', keepVoiceAlive); window.addEventListener('mousedown', keepVoiceAlive);
-                // 🔴 终极双轨硬件心跳回路：每1.5秒自动执行底层激活，强制扣住Eaglercraft声卡，永久拒绝哑巴！
-                setInterval(initAudio, 1500);
+                setInterval(initAudio, 1500); // 1.5秒循环心跳保活
             }, 450);
         }else{
             playAlertSound(); document.getElementById("errorModal").classList.add("active");
         }
     }
-    function closeModal(){ playSynth(440, 0.05); document.getElementById("errorModal").classList.remove("active"); document.getElementById("alert-sym").innerHTML = "🛑"; document.getElementById("alert-tit").innerHTML = "CRITICAL ERROR"; document.getElementById("alert-txt").innerHTML = "身份凭证错误。<br>安全防御矩阵已拦截当前伪造请求。"; document.getElementById("pw").value=""; document.getElementById("pw").focus(); }
+    function closeModal(){ playSynth(440, 0.05, "sine", 0.40); document.getElementById("errorModal").classList.remove("active"); document.getElementById("alert-sym").innerHTML = "🛑"; document.getElementById("alert-tit").innerHTML = "CRITICAL ERROR"; document.getElementById("alert-txt").innerHTML = "身份凭证错误。<br>安全防御矩阵已拦截当前伪造请求。"; document.getElementById("pw").value=""; document.getElementById("pw").focus(); }
     
-    // 多按键声反馈系统联动
     document.body.addEventListener('keydown', function(e) {
         if(document.getElementById('pw') && document.activeElement === document.getElementById('pw')) {
             if ("Enter" === e.key) { verify(); playClickFeedback("Enter"); }
