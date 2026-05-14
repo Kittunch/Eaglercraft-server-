@@ -52,7 +52,7 @@
         .error-btn { background: #ef4444; color: white; border: none; padding: 14px; width: 100%; border-radius: 12px; font-weight: 800; cursor: pointer; letter-spacing: 2px; }
         .error-btn:hover { background: #dc2626; box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); }
 
-        /* 死锁全屏高能黑客界面（红光闪烁动画） */
+        /* 死锁全屏界面 */
         .trap-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #070204; z-index: 9999999; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; }
         .trap-overlay.active { opacity: 1; pointer-events: auto; animation: screenRedFlash 0.2s infinite; }
         @keyframes screenRedFlash { 0% { background: #070204; } 50% { background: #1f030a; } 100% { background: #070204; } }
@@ -63,6 +63,32 @@
         .trap-desc { font-size: 13px; color: #94a3b8; margin-bottom: 30px; line-height: 1.6; font-family: monospace; }
         .trap-input { padding: 18px; border: 2px solid #ef4444; border-radius: 12px; width: 100%; background: #111; color: #00ffaa; font-size: 20px; text-align: center; outline: none; font-family: monospace; letter-spacing: 6px; box-shadow: 0 0 20px rgba(239,68,68,0.2); user-select: text; -webkit-user-select: text; }
         .trap-input:focus { border-color: #00ffaa; box-shadow: 0 0 30px rgba(0,255,170,0.4); }
+
+        /* 🔴 新增：全屏抖动剧烈特效类 */
+        .shake-screen { animation: violentShake 0.15s infinite; }
+        @keyframes violentShake {
+            0% { transform: translate(2px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(0px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(2px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            100% { transform: translate(1px, -2px) rotate(0deg); }
+        }
+
+        /* 🔴 新增：解密成功主控制台外观样式 */
+        .success-egg-wrapper {
+            position: fixed; z-index: 9999; text-align: center; font-family: monospace; background: rgba(5, 4, 8, 0.85);
+            border: 2px solid #00ffaa; padding: 40px 60px; border-radius: 20px; box-shadow: 0 0 60px rgba(0, 255, 170, 0.4);
+            opacity: 0; transform: scale(0.6); transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .success-egg-wrapper.active { opacity: 1; transform: scale(1); }
+        .egg-title { font-size: 32px; font-weight: 900; color: #00ffaa; letter-spacing: 4px; margin-bottom: 25px; text-shadow: 0 0 15px rgba(0,255,170,0.6); }
+        .egg-body { font-size: 16px; color: #ffffff; line-height: 2; border-top: 1px dashed rgba(0,255,170,0.3); padding-top: 20px; }
+        .hud-line { color: #8b5cf6; font-size: 12px; margin-bottom: 15px; letter-spacing: 2px; }
     </style>
 </head>
 <body>
@@ -71,7 +97,7 @@
     <canvas id="bg-canvas"></canvas>
     
     <!-- 主登录界面 -->
-    <div class="glow-wrapper">
+    <div class="glow-wrapper" id="main-panel">
         <div class="box">
             <div class="hud-display">
                 SYS.STATUS: <span class="hud-green">ONLINE</span><br>
@@ -102,7 +128,7 @@
         </div>
     </div>
 
-    <!-- 🔴 全屏死锁高能陷阱界面 -->
+    <!-- 全屏死锁高能陷阱界面 -->
     <div class="trap-overlay" id="trap-screen">
         <div class="trap-box">
             <div class="trap-title">🚨 SYSTEM LOCKDOWN 🚨</div>
@@ -111,19 +137,35 @@
         </div>
     </div>
 
+    <!-- 🔴 新增：解密成功本地高能彩蛋台（初始隐藏） -->
+    <div class="success-egg-wrapper" id="success-egg">
+        <div class="hud-line">⚡ OVERRIDE COMPLETED // MAINFRAME UNLOCKED ⚡</div>
+        <div class="egg-title">🔓 核心数据库越权成功</div>
+        <div class="egg-body" id="egg-typer">
+            <!-- 稍后由高级脚本注入动态呈现的内容 -->
+        </div>
+    </div>
+
     <script>
         // ==========================================
-        // 🛠️ 核心可配置项 (直接在此处修改参数)
+        // 🛠️ 核心可配置项
         // ==========================================
         const CORRECT_KEY = "666888";            // 1. 登录主密钥
         const OVERRIDE_KEY = "999999";           // 2. 陷阱解除密钥
-        const TARGET_URL = "baidu.com"; // 3. 解锁成功后跳转的目标网页
         
-        // 4. 打字机滚动文本
+        // 3. 🔴 终极自定义：通关后在屏幕中央打印的机密文字内容（支持 HTML 换行与颜色标签）
+        const SECRET_SECRET_TEXT = `
+            [系统档案]：核心数据流校验通过。<br>
+            [执行结果]：成功夺取超级管理员主控权。<br><br>
+            <span style="color:#8b5cf6; font-weight:bold;">恭喜通关！这是一条为你定制的加密隐藏信息。</span><br>
+            你已经成功攻破了本页面的全部多层安全防御网。<br>
+            现在，整个系统正处于你的绝对控制之下。
+        `;
+
         const subTexts = ["ENTER DECRYPTION KEY TO PROCEED", "SECURITY PROTOCOL ACTIVE", "AUTHORIZED PERSONNEL ONLY"];
 
         // ==========================================
-        // 核心元素节点
+        // 元素节点获取
         // ==========================================
         const accessKey = document.getElementById('access-key');
         const submitBtn = document.getElementById('submit-btn');
@@ -133,18 +175,22 @@
         const trapUnlock = document.getElementById('trap-unlock');
         const trapDescription = document.getElementById('trap-description');
         const typerText = document.getElementById('typer-text');
+        const mainPanel = document.getElementById('main-panel');
+        const successEgg = document.getElementById('success-egg');
+        const eggTyper = document.getElementById('egg-typer');
 
         // ---------------- 功能 1：动态黑客数字雨背景 ----------------
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
+        let matrixSpeed = 30; // 默认数字雨刷新速率
         function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         resizeCanvas();
         window.addEventListener('resize', resizeCanvas);
 
         const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()_+~`|}{[]:;?><,./-=";
         const fontSize = 14;
-        const columns = canvas.width / fontSize;
-        const rainDrops = Array.from({ length: columns }).fill(1);
+        let columns = canvas.width / fontSize;
+        let rainDrops = Array.from({ length: columns }).fill(1);
 
         function drawMatrix() {
             ctx.fillStyle = 'rgba(2, 1, 4, 0.05)';
@@ -158,11 +204,12 @@
                 rainDrops[i]++;
             }
         }
-        setInterval(drawMatrix, 30);
+        let matrixInterval = setInterval(drawMatrix, matrixSpeed);
 
         // ---------------- 功能 2：打字机动效 ----------------
         let textIndex = 0; let charIndex = 0; let isDeleting = false;
         function typeEffect() {
+            if(!typerText) return;
             let currentText = subTexts[textIndex];
             if (isDeleting) {
                 typerText.innerText = currentText.substring(0, charIndex - 1); charIndex--;
@@ -179,7 +226,7 @@
         }
         window.addEventListener('DOMContentLoaded', () => setTimeout(typeEffect, 500));
 
-        // ---------------- 功能 3：Audio API 音频引擎（键入音效 + 致命死锁噪音） ----------------
+        // ---------------- 功能 3：Audio API 音频引擎（键入反馈 + 致命死锁噪音） ----------------
         let audioCtx = null; let noiseNode = null; let alarmOsc = null;
 
         function initAudio() {
@@ -187,18 +234,13 @@
             if (audioCtx.state === 'suspended') audioCtx.resume();
         }
 
-        // 激活音频监听（用户随便点一下页面就能发声，绕过浏览器限制）
         window.addEventListener('click', initAudio, { once: true });
         window.addEventListener('keydown', initAudio, { once: true });
 
-        // 机械按键反馈音效
         function playKeySound() {
-            initAudio();
-            if(!audioCtx) return;
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(550 + Math.random() * 350, audioCtx.currentTime);
+            initAudio(); if(!audioCtx) return;
+            const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+            osc.type = 'sine'; osc.frequency.setValueAtTime(550 + Math.random() * 350, audioCtx.currentTime);
             gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
             gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.04);
             osc.connect(gain); gain.connect(audioCtx.destination);
@@ -207,44 +249,25 @@
         accessKey.addEventListener('input', playKeySound);
         trapUnlock.addEventListener('input', playKeySound);
 
-        // 启动死锁警报轰鸣噪音
         function startHackerNoise() {
-            initAudio();
-            if (!audioCtx || noiseNode || alarmOsc) return; 
-
-            // A. 白噪音发生器
+            initAudio(); if (!audioCtx || noiseNode || alarmOsc) return; 
             const bufferSize = 2 * audioCtx.sampleRate;
             const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
             const output = noiseBuffer.getChannelData(0);
             for (let i = 0; i < bufferSize; i++) { output[i] = Math.random() * 2 - 1; }
-            noiseNode = audioCtx.createBufferSource();
-            noiseNode.buffer = noiseBuffer; noiseNode.loop = true;
-
-            const filter = audioCtx.createBiquadFilter();
-            filter.type = 'lowpass'; filter.frequency.setValueAtTime(750, audioCtx.currentTime);
-            const noiseGain = audioCtx.createGain();
-            noiseGain.gain.setValueAtTime(0.12, audioCtx.currentTime); // 噪音量
-
+            noiseNode = audioCtx.createBufferSource(); noiseNode.buffer = noiseBuffer; noiseNode.loop = true;
+            const filter = audioCtx.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.setValueAtTime(750, audioCtx.currentTime);
+            const noiseGain = audioCtx.createGain(); noiseGain.gain.setValueAtTime(0.12, audioCtx.currentTime);
             noiseNode.connect(filter); filter.connect(noiseGain); noiseGain.connect(audioCtx.destination);
             noiseNode.start();
 
-            // B. 侵略性尖锐锯齿波警报
-            alarmOsc = audioCtx.createOscillator();
-            const alarmGain = audioCtx.createGain();
-            alarmOsc.type = 'sawtooth';
-            alarmOsc.frequency.setValueAtTime(140, audioCtx.currentTime);
+            alarmOsc = audioCtx.createOscillator(); const alarmGain = audioCtx.createGain();
+            alarmOsc.type = 'sawtooth'; alarmOsc.frequency.setValueAtTime(140, audioCtx.currentTime);
             alarmOsc.frequency.linearRampToValueAtTime(320, audioCtx.currentTime + 0.5);
             alarmOsc.frequency.linearRampToValueAtTime(140, audioCtx.currentTime + 1.0);
-            alarmGain.gain.setValueAtTime(0.18, audioCtx.currentTime); // 警报音量
-
-            setInterval(() => {
-                if (audioCtx && alarmGain) {
-                    alarmGain.gain.setValueAtTime(alarmGain.gain.value === 0 ? 0.18 : 0, audioCtx.currentTime);
-                }
-            }, 120);
-
-            alarmOsc.connect(alarmGain); alarmGain.connect(audioCtx.destination);
-            alarmOsc.start();
+            alarmGain.gain.setValueAtTime(0.18, audioCtx.currentTime);
+            setInterval(() => { if (audioCtx && alarmGain) alarmGain.gain.setValueAtTime(alarmGain.gain.value === 0 ? 0.18 : 0, audioCtx.currentTime); }, 120);
+            alarmOsc.connect(alarmGain); alarmGain.connect(audioCtx.destination); alarmOsc.start();
         }
 
         function stopHackerNoise() {
@@ -255,41 +278,54 @@
         // ---------------- 功能 4：防拆解与作弊惩罚机制 ----------------
         function triggerTrap(reasonText) {
             trapDescription.innerHTML = `${reasonText}<br>主系统已进入死锁保护状态，核心安全机制已全功率载入。请输入重置代码解除。`;
-            trapScreen.classList.add('active');
-            trapUnlock.focus();
-            startHackerNoise();
+            trapScreen.classList.add('active'); trapUnlock.focus(); startHackerNoise();
         }
 
-        // 1. 禁用右键菜单并拦截惩罚
-        window.addEventListener('contextmenu', e => {
-            e.preventDefault();
-            triggerTrap("检测到未授权的右键菜单请求（尝试审查元素）！");
-        });
-
-        // 2. 拦截全套组合快捷键
+        window.addEventListener('contextmenu', e => { e.preventDefault(); triggerTrap("检测到未授权的右键菜单请求（尝试审查元素）！"); });
         window.addEventListener('keydown', function(e) {
-            // 拦截 Ctrl + S
-            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-                e.preventDefault();
-                triggerTrap("检测到未授权的源码保存行为（Ctrl+S）！");
-            }
-            // 拦截 F12
-            if (e.key === 'F12') {
-                e.preventDefault();
-                triggerTrap("检测到未授权的开发者控制台唤醒（F12）！");
-            }
-            // 拦截 Ctrl+Shift+I / C / J
-            if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'I' || e.key === 'C' || e.key === 'J')) {
-                e.preventDefault();
-                triggerTrap("检测到未授权的控制台代码审查组合键！");
-            }
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); triggerTrap("检测到未授权的源码保存行为（Ctrl+S）！"); }
+            if (e.key === 'F12') { e.preventDefault(); triggerTrap("检测到未授权的开发者控制台唤醒（F12）！"); }
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'I' || e.key === 'C' || e.key === 'J')) { e.preventDefault(); triggerTrap("检测到未授权的控制台代码审查组合键！"); }
         });
 
-        // ---------------- 功能 5：安全主认证流 ----------------
+        // ---------------- 功能 5：🔴 独家定制：本地高能解锁彩蛋流 ----------------
         function launchSystem() {
             if (accessKey.value === CORRECT_KEY) {
-                // 核心修复：成功后清除当前页全页面彻底覆盖跳转，防止因跨域 iframe 产生空白页
-                window.location.replace(TARGET_URL);
+                // 步骤 1：主面板炸裂崩塌动画
+                mainPanel.style.transform = "scale(0.3) rotate(-15deg)";
+                mainPanel.style.opacity = "0";
+                setTimeout(() => mainPanel.style.display = 'none', 400);
+
+                // 步骤 2：全屏幕启动高频震动 (持续 1.2 秒)
+                document.body.classList.add('shake-screen');
+                
+                // 步骤 3：背景数字雨瞬间暴走超级加倍
+                clearInterval(matrixInterval);
+                matrixInterval = setInterval(drawMatrix, 3); // 下落速度增快 10 倍
+
+                // 步骤 4：震动停歇，升起核心机密控制台
+                setTimeout(() => {
+                    document.body.classList.remove('shake-screen');
+                    successEgg.classList.add('active');
+                    
+                    // 步骤 5：在解密机密框内以打字机输出加密数据
+                    let eggCharIdx = 0;
+                    function typeEggText() {
+                        if (eggCharIdx <= SECRET_SECRET_TEXT.length) {
+                            // 处理 HTML 标签以防打字机断断续续
+                            if(SECRET_SECRET_TEXT.substr(eggCharIdx, 1) === '<') {
+                                eggCharIdx = SECRET_SECRET_TEXT.indexOf('>', eggCharIdx) + 1;
+                            } else {
+                                eggCharIdx++;
+                            }
+                            eggTyper.innerHTML = SECRET_SECRET_TEXT.substring(0, eggCharIdx);
+                            playKeySound(); // 每打一个字产生一次清脆的机械声
+                            setTimeout(typeEggText, 25);
+                        }
+                    }
+                    typeEggText();
+                }, 1200);
+
             } else {
                 errorModal.classList.add('active');
                 accessKey.value = "";
@@ -300,12 +336,10 @@
         accessKey.addEventListener('keypress', (e) => { if (e.key === 'Enter') launchSystem(); });
         closeError.addEventListener('click', () => errorModal.classList.remove('active'));
 
-        // 解除死锁
+        // 解除死锁陷阱
         trapUnlock.addEventListener('input', () => {
             if (trapUnlock.value === OVERRIDE_KEY) {
-                stopHackerNoise();
-                trapScreen.classList.remove('active');
-                trapUnlock.value = "";
+                stopHackerNoise(); trapScreen.classList.remove('active'); trapUnlock.value = "";
             }
         });
     </script>
